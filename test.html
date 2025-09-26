@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>D3 TEST</title>
+</head>
+<body>
+<svg></svg>
+ 
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+  // данные для отображения на графике
+  const rates = [
+    {date: new Date("03/01/2025"), rate: 88.2568},
+    {date: new Date("03/04/2025"), rate: 89.2497},
+    {date: new Date("03/05/2025"), rate: 89.2448},
+    {date: new Date("03/06/2025"), rate: 89.7878},
+    {date: new Date("03/07/2025"), rate: 89.5724},
+    {date: new Date("03/08/2025"), rate: 89.1362},
+    {date: new Date("03/11/2025"), rate: 88.3872},
+    {date: new Date("03/12/2025"), rate: 86.5669},
+    {date: new Date("03/13/2025"), rate: 86.6204},
+    {date: new Date("03/14/2025"), rate: 86.6190},
+    {date: new Date("03/15/2025"), rate: 85.5694},
+    {date: new Date("03/18/2025"), rate: 84.3059},
+    {date: new Date("03/19/2025"), rate: 81.5018},
+    {date: new Date("03/20/2025"), rate: 82.8487},
+    {date: new Date("03/21/2025"), rate: 84.3955},
+    {date: new Date("03/22/2025"), rate: 84.6400},
+    {date: new Date("03/25/2025"), rate: 83.8737},
+  ];
+  const width = 928;
+  const height = 500;
+  const marginTop = 20;
+  const marginRight = 30;
+  const marginBottom = 30;
+  const marginLeft = 40;
+ 
+  // Определяем шкалу из временных меток по X 
+  const x = d3.scaleUtc(d3.extent(rates , d => d.date), [marginLeft, width - marginRight]);
+ 
+  // Определяем шкалу по Y
+  const y = d3.scaleLinear([d3.min(rates , d => d.rate) - 1, d3.max(rates , d => d.rate) + 1], [height - marginBottom, marginTop]);
+ 
+  // Определяем генератор линий
+  const line = d3.line()
+      .x(d => x(d.date))
+      .y(d => y(d.rate));
+ 
+  // получаем элемент SVG для создания графика
+  const svg = d3.select("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [0, 0, width, height]);
+ 
+  // Добавляем ось x.
+  svg.append("g")
+      .attr("transform", `translate(0,${height - marginBottom})`)
+      .call(d3.axisBottom(x).ticks(width / 80));
+ 
+  // Добавляем ось y-axis
+  svg.append("g")
+      .attr("transform", `translate(${marginLeft},0)`)
+      .call(d3.axisLeft(y).ticks(height / 40))
+      // добавляем сетку - горизонтальные линии
+      .call(g => g.selectAll(".tick line").clone()
+          .attr("x2", width - marginLeft - marginRight)
+          .attr("stroke-opacity", 0.1));
+ 
+  // Добавляем сам график
+  svg.append("path")
+      .attr("fill", "none")         // убираем заполнение
+      .attr("stroke", "steelblue")  // цвет линии графика
+      .attr("stroke-width", 1.5)    // толщина линии
+      .attr("d", line(rates));      
+  </script>
+</body>
+</html>
