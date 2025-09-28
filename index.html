@@ -1,78 +1,209 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>D3 TEST</title>
+    <meta charset="utf-8" />
+    <title>D3 TEST</title>
+    <style>
+    .node {
+        stroke: #fff;
+        stroke-width: 1.5px;
+        cursor: pointer;
+    }
+
+    .link {
+        stroke: #999;
+        stroke-opacity: 0.6;
+    }
+
+    .node:hover {
+        stroke: #000;
+        stroke-width: 3px;
+    }
+
+    .link:hover {
+        stroke: #ff0000;
+        stroke-width: 3px;
+    }
+
+    .highlighted {
+        stroke: #ff0000;
+        stroke-width: 3px;
+        fill: #ffcccc !important;
+    }
+
+    .linked-highlight {
+        stroke: #ff0000;
+        stroke-opacity: 1;
+        stroke-width: 2px;
+    }
+    </style>
 </head>
 <body>
-<svg></svg>
- 
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script>
-  // данные для отображения на графике
-  const rates = [
-    {date: new Date("03/01/2025"), rate: 88.2568},
-    {date: new Date("03/04/2025"), rate: 89.2497},
-    {date: new Date("03/05/2025"), rate: 89.2448},
-    {date: new Date("03/06/2025"), rate: 89.7878},
-    {date: new Date("03/07/2025"), rate: 89.5724},
-    {date: new Date("03/08/2025"), rate: 89.1362},
-    {date: new Date("03/11/2025"), rate: 88.3872},
-    {date: new Date("03/12/2025"), rate: 86.5669},
-    {date: new Date("03/13/2025"), rate: 86.6204},
-    {date: new Date("03/14/2025"), rate: 86.6190},
-    {date: new Date("03/15/2025"), rate: 85.5694},
-    {date: new Date("03/18/2025"), rate: 84.3059},
-    {date: new Date("03/19/2025"), rate: 81.5018},
-    {date: new Date("03/20/2025"), rate: 82.8487},
-    {date: new Date("03/21/2025"), rate: 84.3955},
-    {date: new Date("03/22/2025"), rate: 84.6400},
-    {date: new Date("03/25/2025"), rate: 83.8737},
-  ];
-  const width = 928;
-  const height = 500;
-  const marginTop = 20;
-  const marginRight = 30;
-  const marginBottom = 30;
-  const marginLeft = 40;
- 
-  // Определяем шкалу из временных меток по X 
-  const x = d3.scaleUtc(d3.extent(rates , d => d.date), [marginLeft, width - marginRight]);
- 
-  // Определяем шкалу по Y
-  const y = d3.scaleLinear([d3.min(rates , d => d.rate) - 1, d3.max(rates , d => d.rate) + 1], [height - marginBottom, marginTop]);
- 
-  // Определяем генератор линий
-  const line = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.rate));
- 
-  // получаем элемент SVG для создания графика
-  const svg = d3.select("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [0, 0, width, height]);
- 
-  // Добавляем ось x.
-  svg.append("g")
-      .attr("transform", `translate(0,${height - marginBottom})`)
-      .call(d3.axisBottom(x).ticks(width / 80));
- 
-  // Добавляем ось y-axis
-  svg.append("g")
-      .attr("transform", `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(y).ticks(height / 40))
-      // добавляем сетку - горизонтальные линии
-      .call(g => g.selectAll(".tick line").clone()
-          .attr("x2", width - marginLeft - marginRight)
-          .attr("stroke-opacity", 0.1));
- 
-  // Добавляем сам график
-  svg.append("path")
-      .attr("fill", "none")         // убираем заполнение
-      .attr("stroke", "steelblue")  // цвет линии графика
-      .attr("stroke-width", 1.5)    // толщина линии
-      .attr("d", line(rates));      
-  </script>
+    <div id="graph"></div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Данные графа
+        const graph = {
+            nodes: [
+                { id: "A", group: 1 },
+                { id: "B", group: 1 },
+                { id: "C", group: 2 },
+                { id: "D", group: 2 },
+                { id: "E", group: 3 }
+            ],
+            links: [
+                { source: "A", target: "B" },
+                { source: "B", target: "C" },
+                { source: "C", target: "D" },
+                { source: "D", target: "E" },
+                { source: "A", target: "C" },
+                { source: "B", target: "E" }
+            ]
+        };
+        const width = 800, height = 600;
+
+        // Создание SVG
+        const svg = d3.select("#graph")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Инициализация симуляции
+        const simulation = d3.forceSimulation(graph.nodes)
+            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
+        // Создание линий (рёбра)
+        const link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter().append("line")
+            .attr("class", "link")
+            .attr("stroke-width", 2);
+
+        // Создание узлов
+        const node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("circle")
+            .data(graph.nodes)
+            .enter().append("circle")
+            .attr("class", "node")
+            .attr("r", 10)
+            .attr("fill", d => d3.schemeCategory10[d.group])
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        // Добавление подписей
+        const label = svg.append("g")
+            .attr("class", "labels")
+            .selectAll("text")
+            .data(graph.nodes)
+            .enter().append("text")
+            .text(d => d.id)
+            .attr("font-size", 12)
+            .attr("dx", 15)
+            .attr("dy", 4);
+
+        // Функции для drag&drop
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        // Обновление позиций при симуляции
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+
+            label
+                .attr("x", d => d.x)
+                .attr("y", d => d.y);
+        });
+
+        // Функция подсветки связанных элементов
+        function highlightConnected(d) {
+            // Сбрасываем предыдущую подсветку
+            node.classed("highlighted", false);
+            link.classed("linked-highlight", false);
+
+            // Подсвечиваем выбранный узел
+            d3.select(this).classed("highlighted", true);
+
+            // Находим связанные рёбра
+            const connectedLinks = graph.links.filter(link => 
+                link.source.id === d.id || link.target.id === d.id
+            );
+
+            // Подсвечиваем связанные рёбра
+            link.filter(l => connectedLinks.includes(l))
+                .classed("linked-highlight", true);
+
+            // Находим связанные узлы
+            const connectedNodes = [];
+            connectedLinks.forEach(link => {
+                if (link.source.id !== d.id) connectedNodes.push(link.source.id);
+                if (link.target.id !== d.id) connectedNodes.push(link.target.id);
+            });
+
+            // Подсвечиваем связанные узлы
+            node.filter(n => connectedNodes.includes(n.id))
+                .classed("highlighted", true);
+        }
+
+        // Добавляем обработчики событий
+        node.on("mouseover", function(event, d) {
+            highlightConnected.call(this, d);
+        });
+
+        node.on("click", function(event, d) {
+            // При клике фиксируем подсветку
+            highlightConnected.call(this, d);
+            event.stopPropagation();
+        });
+
+        // Сброс подсветки при клике на пустое место
+        svg.on("click", () => {
+            node.classed("highlighted", false);
+            link.classed("linked-highlight", false);
+        });
+
+        // Подсветка рёбер при наведении
+        link.on("mouseover", function(event, d) {
+            // Сбрасываем подсветку
+            node.classed("highlighted", false);
+            link.classed("linked-highlight", false);
+
+            // Подсвечиваем ребро
+            d3.select(this).classed("linked-highlight", true);
+
+            // Подсвечиваем связанные узлы
+            node.filter(n => n.id === d.source.id || n.id === d.target.id)
+                .classed("highlighted", true);
+        });
+
+    </script>
 </body>
 </html>
