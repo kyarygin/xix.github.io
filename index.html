@@ -36,6 +36,37 @@
         stroke-opacity: 1;
         stroke-width: 2px;
     }
+
+    .tooltip {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        pointer-events: none;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        max-width: 200px;
+        z-index: 1000;
+    }
+
+    .tooltip h3 {
+        margin: 0 0 5px 0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .tooltip p {
+        margin: 2px 0;
+    }
+
+    .highlight {
+        stroke: #ff0000;
+        stroke-width: 3px;
+    }
+
+
     </style>
 </head>
 <body>
@@ -45,21 +76,21 @@
         // Данные графа
         const graph = {
             nodes: [
-                { id: "A", group: 1 },
-                { id: "B", group: 1 },
-                { id: "C", group: 2 },
-                { id: "D", group: 2 },
-                { id: "E", group: 3 }
+                { id: 0, color: 1, group: "Меценат", name: "Савва Мамонтов", description : "Меценат - Савва Мамонтов"},
+                { id: 1, color: 2, group: "Художник", name: "Василий Поленов", description : "Художник - Василий Поленов"},
+                { id: 2, color: 2, group: "Художник", name: "Илья Репин", description : "Художник - Илья Репин"},
+                { id: 3, color: 3, group: "Музыкант", name: "Сергей Рахманинов", description : "Музыкант - Сергей Рахманинов"},
+                { id: 4, color: 3, group: "Учёный", name: "Николай Римский-Корсаков", description :"Учёный - Николай Римский-Корсаков" }
             ],
             links: [
-                { source: "A", target: "B" },
-                { source: "B", target: "C" },
-                { source: "C", target: "D" },
-                { source: "D", target: "E" },
-                { source: "A", target: "C" },
-                { source: "B", target: "E" }
+                { source: 0, target: 1 },
+                { source: 0, target: 2 },
+                { source: 0, target: 3 },
+                { source: 0, target: 4 },
+                { source: 1, target: 2 }
             ]
         };
+
         const width = 800, height = 600;
 
         // Создание SVG
@@ -73,6 +104,11 @@
             .force("link", d3.forceLink(graph.links).id(d => d.id).distance(100))
             .force("charge", d3.forceManyBody().strength(-300))
             .force("center", d3.forceCenter(width / 2, height / 2));
+
+        const tooltip = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
         // Создание линий (рёбра)
         const link = svg.append("g")
@@ -91,11 +127,13 @@
             .enter().append("circle")
             .attr("class", "node")
             .attr("r", 10)
-            .attr("fill", d => d3.schemeCategory10[d.group])
-            .call(d3.drag()
+            .attr("fill", d => d3.schemeCategory10[d.color])
+            .call(
+                d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
-                .on("end", dragended));
+                .on("end", dragended)
+            );
 
         // Добавление подписей
         const label = svg.append("g")
@@ -103,10 +141,13 @@
             .selectAll("text")
             .data(graph.nodes)
             .enter().append("text")
-            .text(d => d.id)
-            .attr("font-size", 12)
-            .attr("dx", 15)
-            .attr("dy", 4);
+            .text(d => d.name)
+            .attr("font-size", 14)
+            .attr("dx", 0)
+            .attr("dy", 20)
+            .attr("text-anchor", "middle")
+            .style("pointer-events", "none") // Чтобы текст не мешал взаимодействию
+        ;
 
         // Функции для drag&drop
         function dragstarted(event, d) {
@@ -141,6 +182,7 @@
             label
                 .attr("x", d => d.x)
                 .attr("y", d => d.y);
+
         });
 
         // Функция подсветки связанных элементов
@@ -174,35 +216,87 @@
         }
 
         // Добавляем обработчики событий
-        node.on("mouseover", function(event, d) {
-            highlightConnected.call(this, d);
-        });
+        // node.on("mouseover", function(event, d) {
+        //     highlightConnected.call(this, d);
+        // });
 
         node.on("click", function(event, d) {
             // При клике фиксируем подсветку
             highlightConnected.call(this, d);
             event.stopPropagation();
+
+            // Скрываем все остальные tooltip
+            hideAllTooltips();
+
+            // Показываем tooltip для текущего узла
+            showTooltip.call(this, event, d);
+
         });
 
         // Сброс подсветки при клике на пустое место
         svg.on("click", () => {
             node.classed("highlighted", false);
             link.classed("linked-highlight", false);
+            if (event.target === this) {
+                hideAllTooltips();
+            }
         });
 
         // Подсветка рёбер при наведении
-        link.on("mouseover", function(event, d) {
-            // Сбрасываем подсветку
-            node.classed("highlighted", false);
-            link.classed("linked-highlight", false);
+        // link.on("mouseover", function(event, d) {
+        //     // Сбрасываем подсветку
+        //     node.classed("highlighted", false);
+        //     link.classed("linked-highlight", false);
 
-            // Подсвечиваем ребро
-            d3.select(this).classed("linked-highlight", true);
+        //     // Подсвечиваем ребро
+        //     d3.select(this).classed("linked-highlight", true);
 
-            // Подсвечиваем связанные узлы
-            node.filter(n => n.id === d.source.id || n.id === d.target.id)
-                .classed("highlighted", true);
-        });
+        //     // Подсвечиваем связанные узлы
+        //     node.filter(n => n.id === d.source.id || n.id === d.target.id)
+        //         .classed("highlighted", true);
+        // });
+        // Функция для показа tooltip
+        function showTooltip(event, d) {
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", 0.9);
+
+            tooltip.html(`
+                <h3>${d.name || d.id}</h3>
+                <p><strong>ID:</strong> ${d.id}</p>
+                <p><strong>Группа:</strong> ${d.group}</p>
+                <p><strong>Описание:</strong> ${d.description || 'Нет описания'}</p>
+            `)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+
+            // Подсвечиваем узел
+            d3.select(this)
+                .classed("highlight", true)
+                .attr("r", 15);
+        }
+
+        // Функция для скрытия tooltip
+        function hideTooltip(event, d) {
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+
+            // Убираем подсветку
+            d3.select(this)
+                .classed("highlight", false)
+                .attr("r", 10);
+        }
+
+        function hideAllTooltips() {
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+
+            node.classed("highlight", false)
+                .attr("r", 10);
+        }
+
 
     </script>
 </body>

@@ -1,0 +1,6 @@
+source,target,weight,type
+A,B,1,friend
+B,C,2,family
+C,D,1,colleague
+A,D,1,friend
+B,E,3,business
