@@ -87,20 +87,21 @@
     <script>
         // Данные графа
         const graph = {
-nodes: [
-{id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов", group_id: 2},
-{id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов", group_id: 0},
-{id: 2, short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин", group_id: 0},
-{id: 3, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов", group_id: 1},
-{id: 4, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков", group_id: 1}
-],
-links: [
-{source: 0, target: 1, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
-{source: 0, target: 2, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
-{source: 0, target: 3, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
-{source: 0, target: 4, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
-{source: 1, target: 2, full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Илья Ефимович Репин", description: "Описание Поленов - Репин"}
-]};
+            nodes: [
+                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов", group_id: 2},
+                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов", group_id: 0},
+                {id: 2, short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин", group_id: 0},
+                {id: 3, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов", group_id: 1},
+                {id: 4, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков", group_id: 1}
+            ],
+            links: [
+                {source: 0, target: 1, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
+                {source: 0, target: 2, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
+                {source: 0, target: 3, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
+                {source: 0, target: 4, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
+                {source: 1, target: 2, full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Илья Ефимович Репин", description: "Описание Поленов - Репин"}
+            ]
+        };
 
         const width = 800, height = 600;
 

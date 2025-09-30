@@ -44,14 +44,21 @@ def format_pair(key: str, value: str) -> str:
 
 def build_js_string(nodes, edges):
     nodes_str = ",\n".join(
-        '{' + ', '.join(format_pair(key, value) for key, value in node.items()) + '}'
+        ' '*16 + '{' + ', '.join(format_pair(key, value) for key, value in node.items()) + '}'
         for node in nodes
     )
     links_str = ",\n".join(
-        '{' + ', '.join(format_pair(key, value) for key, value in edge.items()) + '}'
+        ' '*16 + '{' + ', '.join(format_pair(key, value) for key, value in edge.items()) + '}'
         for edge in edges
     )
-    return f"\nnodes: [\n{nodes_str}\n],\nlinks: [\n{links_str}\n]"
+    return (
+        '\n' + ' ' * 12 +
+        f"nodes: [\n{nodes_str}\n" +
+        ' ' * 12 + '],' +
+        '\n' + ' ' * 12 +
+        f"links: [\n{links_str}\n" +
+        ' ' * 12 + ']'
+    )
 
 if __name__ == '__main__':
     nodes, edges = load_data('nodes.csv', 'edges.csv')
@@ -59,6 +66,6 @@ if __name__ == '__main__':
 
     with open('index.html', 'r') as f:
         input_file = f.read()
-    output_file = re.sub(r'(const graph = {)(.*?)(};)', fr"\1{output_str}\3", input_file, flags=re.DOTALL)
+    output_file = re.sub(r'(const graph = {)(.*?)(\s+};)', fr"\1{output_str}\3", input_file, flags=re.DOTALL)
     with open('index.html', 'w') as f:
         f.write(output_file)
