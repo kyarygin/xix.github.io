@@ -18,6 +18,10 @@ def load_data(nodes_file: str, edges_file: str):
         )
         for index, row in pd.read_csv(nodes_file, sep = ';').iterrows()
     ]
+    groups = {node['group'] for node in nodes}
+    group2id = {group: group_id for group_id, group in enumerate(list(groups))}
+    for node in nodes:
+        node['group_id'] = group2id[node['group']]
     full_name2id = {node['full_name']: node['id'] for node in nodes}
     edges = [
         dict(
@@ -31,13 +35,20 @@ def load_data(nodes_file: str, edges_file: str):
     ]
     return nodes, edges
 
+def format_pair(key: str, value: str) -> str:
+    try:
+        value = int(value)
+        return f'{key}: {value}'
+    except:
+        return f'{key}: \"{value}\"'
+
 def build_js_string(nodes, edges):
     nodes_str = ",\n".join(
-        '{' + ', '.join(f'{key}: \"{value}\"' for key, value in node.items()) + '}'
+        '{' + ', '.join(format_pair(key, value) for key, value in node.items()) + '}'
         for node in nodes
     )
     links_str = ",\n".join(
-        '{' + ', '.join(f'{key}: \"{value}\"' for key, value in edge.items()) + '}'
+        '{' + ', '.join(format_pair(key, value) for key, value in edge.items()) + '}'
         for edge in edges
     )
     return f"\nnodes: [\n{nodes_str}\n],\nlinks: [\n{links_str}\n]"

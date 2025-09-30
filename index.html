@@ -88,18 +88,18 @@
         // Данные графа
         const graph = {
 nodes: [
-{id: "0", short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов"},
-{id: "1", short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов"},
-{id: "2", short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин"},
-{id: "3", short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов"},
-{id: "4", short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков"}
+{id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов", group_id: 2},
+{id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов", group_id: 0},
+{id: 2, short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин", group_id: 0},
+{id: 3, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов", group_id: 1},
+{id: 4, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков", group_id: 1}
 ],
 links: [
-{source: "0", target: "1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
-{source: "0", target: "2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
-{source: "0", target: "3", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
-{source: "0", target: "4", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
-{source: "1", target: "2", full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Илья Ефимович Репин", description: "Описание Поленов - Репин"}
+{source: 0, target: 1, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
+{source: 0, target: 2, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
+{source: 0, target: 3, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
+{source: 0, target: 4, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
+{source: 1, target: 2, full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Илья Ефимович Репин", description: "Описание Поленов - Репин"}
 ]};
 
         const width = 800, height = 600;
@@ -139,7 +139,7 @@ links: [
             .enter().append("circle")
             .attr("class", "node")
             .attr("r", 10)
-            .attr("fill", d => d3.schemeCategory10[d.color])
+            .attr("fill", d => d3.schemeCategory10[d.group_id])
             .call(
                 d3.drag()
                 .on("start", dragstarted)
@@ -153,7 +153,7 @@ links: [
             .selectAll("text")
             .data(graph.nodes)
             .enter().append("text")
-            .text(d => d.name)
+            .text(d => d.abr_name)
             .attr("font-size", 14)
             .attr("dx", 0)
             .attr("dy", 20)
@@ -256,7 +256,7 @@ links: [
             // Заполняем tooltip содержимым
             sideTooltip.html(`
                 <div class="tooltip-header">
-                    <h2 style="margin: 0; color: #2c3e50;">${d.name}</h2>
+                    <h2 style="margin: 0; color: #2c3e50;">${d.full_name}</h2>
                     <p style="margin: 5px 0 0 0; color: #7f8c8d; font-size: 12px;">ID: ${d.id}</p>
                 </div>
 
@@ -264,10 +264,10 @@ links: [
                     <div class="stats-grid">
                         <div class="stat-item">
                             <div style="font-size: 11px; color: #7f8c8d;">group</div>
-                            <div style="font-size: 18px; font-weight: bold; color: ${d3.schemeCategory10[d.color]};">${d.group}</div>
+                            <div style="font-size: 18px; font-weight: bold; color: ${d3.schemeCategory10[d.group_id]};">${d.group}</div>
                         </div>
                             <div style="font-size: 11px; color: #7f8c8d;">name</div>
-                            <div style="font-size: 18px; font-weight: bold; color: #e74c3c;">${d.name}</div>
+                            <div style="font-size: 18px; font-weight: bold; color: #e74c3c;">${d.full_name}</div>
                         </div>
                         <div class="stat-item">
                             <div style="font-size: 11px; color: #7f8c8d;">description</div>
