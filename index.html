@@ -25,13 +25,7 @@
         stroke-width: 3px;
     }
 
-    .highlighted {
-        stroke: #ff0000;
-        stroke-width: 3px;
-        fill: #ffcccc !important;
-    }
-
-    .linked-highlight {
+    .link-highlight {
         stroke: #ff0000;
         stroke-opacity: 1;
         stroke-width: 2px;
@@ -71,8 +65,8 @@
         line-height: 1.6;
     }
 
-    .highlight {
-        stroke: #ff0000;
+    .node-highlight {
+        stroke: #000000;
         stroke-width: 3px;
     }
 
@@ -88,17 +82,25 @@
         // Данные графа
         const graph = {
             nodes: [
-                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов", group_id: 2},
-                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов", group_id: 0},
-                {id: 2, short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин", group_id: 0},
-                {id: 3, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов", group_id: 1},
-                {id: 4, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков", group_id: 1}
+                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов", group_id: 0},
+                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов", group_id: 1},
+                {id: 2, short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин", group_id: 1},
+                {id: 3, short_name: "Константин Коровин", abr_name: "К.А. Коровин", group: "Художник", full_name: "Константин Алексеевич Коровин", description: "Описание Коровин", group_id: 1},
+                {id: 4, short_name: "Валентин Серов", abr_name: "В.А. Серов", group: "Художник", full_name: "Валентин Александрович Серов", description: "Описание Серов", group_id: 1},
+                {id: 5, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", group: "Художник", full_name: "Михаил Александрович Врубель", description: "Описание Врубель", group_id: 1},
+                {id: 6, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов", group_id: 2},
+                {id: 7, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков", group_id: 2}
             ],
             links: [
                 {source: 0, target: 1, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
                 {source: 0, target: 2, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
-                {source: 0, target: 3, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
-                {source: 0, target: 4, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
+                {source: 0, target: 6, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
+                {source: 0, target: 7, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
+                {source: 0, target: 4, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Валентин Александрович Серов", description: "nan"},
+                {source: 0, target: 5, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Михаил Александрович Врубель", description: "nan"},
+                {source: 0, target: 3, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
+                {source: 2, target: 4, full_name_1: "Илья Ефимович Репин", full_name_2: "Валентин Александрович Серов", description: "nan"},
+                {source: 4, target: 3, full_name_1: "Валентин Александрович Серов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
                 {source: 1, target: 2, full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Илья Ефимович Репин", description: "Описание Поленов - Репин"}
             ]
         };
@@ -210,7 +212,7 @@
                 // Первый клик - выбираем узел
                 selectedNode = d;
                 node.classed("selected", false);
-                d3.select(this).classed("selected", true);
+                d3.select(this).classed("selected", true).attr("r", 14);
                 showNodeInfo(d);
 
                 // Подсвечиваем смежные узлы
@@ -221,8 +223,7 @@
                 });
 
                 node.filter(node => connectedNodeIds.has(node.id))
-                    .classed("highlight", true)
-                    .attr("r", 14);
+                    .classed("node-highlight", true);
 
             } else if (selectedNode.id !== d.id) {
                 // Второй клик на другом узле - показываем связь
@@ -242,17 +243,16 @@
 
         // Сброс подсветки при клике на пустое место
         svg.on("click", () => {
-            node.classed("highlighted", false);
-            link.classed("linked-highlight", false);
-            // hideSideTooltip();
+            node.classed("node-highlight", false);
+            link.classed("link-highlight", false);
             resetSelection();
         });
 
         // Функция для показа бокового tooltip
         function showNodeInfo(d) {
             // Подсвечиваем узел
-            node.classed("highlight", false);
-            d3.select(`circle[node-id="${d.id}"]`).classed("highlight", true);
+            node.classed("node-highlight", false);
+            d3.select(`circle[node-id="${d.id}"]`).classed("node-highlight", true);
 
             // Заполняем tooltip содержимым
             sideTooltip.html(`
@@ -286,7 +286,7 @@
         function showLinkInfo(linkData, sourceNode, targetNode) {
             sideTooltip.html(`
                 <div class="tooltip-header">
-                    <h2 style="margin: 0; color: #2c3e50;">Связь: ${sourceNode.name} → ${targetNode.name}</h2>
+                    <h2 style="margin: 0; color: #2c3e50;">Связь: ${sourceNode.abr_name} → ${targetNode.abr_name}</h2>
                 </div>
 
                 <div style="line-height: 1.6;">
@@ -295,12 +295,6 @@
             `);
 
             sideTooltip.classed("visible", true);
-        }
-
-        // Функция для скрытия tooltip
-        function hideSideTooltip() {
-            sideTooltip.classed("visible", false);
-            node.classed("highlight", false);
         }
 
         node.attr("node-id", d => d.id);
@@ -317,7 +311,7 @@
             selectedNode = null;
             selectedLink = null;
 
-            node.classed("highlight", false)
+            node.classed("node-highlight", false)
                 .classed("selected", false)
                 .attr("r", 12);
 
