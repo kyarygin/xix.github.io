@@ -8,11 +8,7 @@
         stroke: #fff;
         stroke-width: 1.5px;
         cursor: pointer;
-    }
-
-    .link {
-        stroke: #999;
-        stroke-opacity: 0.6;
+        r: 20;
     }
 
     .node:hover {
@@ -20,15 +16,59 @@
         stroke-width: 3px;
     }
 
+    .node-highlight {
+        stroke: #000000;
+        stroke-width: 3px;
+    }
+
+    .link {
+        stroke: #999;
+        stroke-opacity: 0.6;
+    }
+
+    /* Стили для разных типов связей */
+    .link-friend-1 {
+        stroke: #999;
+        stroke-width: 3.0px;
+        stroke-dasharray: 5,5;
+        opacity: 1;
+    }
+
+    .link-friend-2 {
+        stroke: #999;
+        stroke-width: 1.0px;
+        stroke-dasharray: 5,5;
+        opacity: 0.6;
+    }
+
+    .link-friend-3 {
+        stroke: #999;
+        stroke-width: 1.0px;
+        stroke-dasharray: 5,5;
+        opacity: 0.2;
+    }
+
+    .link-apprentice {
+        stroke: #999;
+        stroke-width: 3.0px;
+        opacity: 1;
+    }
+
+    .link-family {
+        stroke: #db4500;
+        stroke-width: 3.0px;
+        opacity: 0.9;
+    }
+
+
     .link:hover {
         stroke: #ff0000;
         stroke-width: 3px;
     }
 
     .link-highlight {
-        stroke: #ff0000;
-        stroke-opacity: 1;
-        stroke-width: 2px;
+        stroke-opacity: 1 !important;
+        stroke-width: 5px !important;
     }
 
     .side-tooltip {
@@ -65,10 +105,6 @@
         line-height: 1.6;
     }
 
-    .node-highlight {
-        stroke: #000000;
-        stroke-width: 3px;
-    }
 
 
     </style>
@@ -82,26 +118,40 @@
         // Данные графа
         const graph = {
             nodes: [
-                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов", group_id: 0},
-                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов", group_id: 1},
-                {id: 2, short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин", group_id: 1},
-                {id: 3, short_name: "Константин Коровин", abr_name: "К.А. Коровин", group: "Художник", full_name: "Константин Алексеевич Коровин", description: "Описание Коровин", group_id: 1},
-                {id: 4, short_name: "Валентин Серов", abr_name: "В.А. Серов", group: "Художник", full_name: "Валентин Александрович Серов", description: "Описание Серов", group_id: 1},
-                {id: 5, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", group: "Художник", full_name: "Михаил Александрович Врубель", description: "Описание Врубель", group_id: 1},
-                {id: 6, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов", group_id: 2},
-                {id: 7, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков", group_id: 2}
+                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", group: "Меценат", full_name: "Савва Иванович Мамонтов", description: "Описание Мамонтов", group_id: 1},
+                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", group: "Художник", full_name: "Василий Дмитриевич Поленов", description: "Описание Поленов", group_id: 2},
+                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", group: "Художник", full_name: "Елена Дмитриевна Поленова", description: "Описание Поленова", group_id: 2},
+                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", group: "Художник", full_name: "Илья Ефимович Репин", description: "Описание Репин", group_id: 2},
+                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", group: "Художник", full_name: "Константин Алексеевич Коровин", description: "Описание Коровин", group_id: 2},
+                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", group: "Художник", full_name: "Валентин Александрович Серов", description: "Описание Серов", group_id: 2},
+                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", group: "Художник", full_name: "Михаил Александрович Врубель", description: "Описание Врубель", group_id: 2},
+                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", description: "Описание Рахманинов", group_id: 3},
+                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", description: "Описание Римский-Корсаков", group_id: 3},
+                {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", group: "Скульптор", full_name: "Марк Матвеевич Антокольский", description: "nan", group_id: 0},
+                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", group: "Архитектор", full_name: "Виктор Александрович Гартман", description: "nan", group_id: 5},
+                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", group: "Ученый", full_name: "Сергей Петрович Боткин", description: "nan", group_id: 6},
+                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", group: "Критик", full_name: "Михаил Михайлович Иванов", description: "nan", group_id: 4},
+                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", group: "Критик", full_name: "Адриан Викторович Прахов", description: "nan", group_id: 4}
             ],
             links: [
-                {source: 0, target: 1, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
-                {source: 0, target: 2, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
-                {source: 0, target: 6, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
-                {source: 0, target: 7, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
-                {source: 0, target: 4, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Валентин Александрович Серов", description: "nan"},
-                {source: 0, target: 5, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Михаил Александрович Врубель", description: "nan"},
-                {source: 0, target: 3, full_name_1: "Савва Иванович Мамонтов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
-                {source: 2, target: 4, full_name_1: "Илья Ефимович Репин", full_name_2: "Валентин Александрович Серов", description: "nan"},
-                {source: 4, target: 3, full_name_1: "Валентин Александрович Серов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
-                {source: 1, target: 2, full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Илья Ефимович Репин", description: "Описание Поленов - Репин"}
+                {source: 0, target: 1, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
+                {source: 0, target: 3, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
+                {source: 0, target: 7, type: "friend-2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
+                {source: 0, target: 8, type: "friend-2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
+                {source: 0, target: 5, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Валентин Александрович Серов", description: "nan"},
+                {source: 0, target: 6, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Михаил Александрович Врубель", description: "nan"},
+                {source: 0, target: 4, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
+                {source: 0, target: 12, type: "friend-2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Михаил Михайлович Иванов", description: "nan"},
+                {source: 0, target: 10, type: "friend-2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Виктор Александрович Гартман", description: "nan"},
+                {source: 0, target: 13, type: "friend-2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Адриан Викторович Прахов", description: "nan"},
+                {source: 3, target: 5, type: "apprentice", full_name_1: "Илья Ефимович Репин", full_name_2: "Валентин Александрович Серов", description: "nan"},
+                {source: 5, target: 4, type: "friend-1", full_name_1: "Валентин Александрович Серов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
+                {source: 1, target: 3, type: "friend-1", full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Илья Ефимович Репин", description: "Описание Поленов - Репин"},
+                {source: 1, target: 2, type: "family", full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Елена Дмитриевна Поленова", description: "Описание Поленов - Поленова"},
+                {source: 9, target: 0, type: "friend-1", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Савва Иванович Мамонтов", description: "nan"},
+                {source: 9, target: 10, type: "friend-2", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Виктор Александрович Гартман", description: "nan"},
+                {source: 9, target: 11, type: "friend-3", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Сергей Петрович Боткин", description: "nan"},
+                {source: 9, target: 12, type: "friend-1", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Михаил Михайлович Иванов", description: "nan"}
             ]
         };
 
@@ -127,12 +177,13 @@
 
         // Создание линий (рёбра)
         const link = svg.append("g")
-            .attr("class", "links")
+            // .attr("class", d => `link`)
             .selectAll("line")
             .data(graph.links)
             .enter().append("line")
-            .attr("class", "link")
-            .attr("stroke-width", 2);
+            .attr("stroke-width", 2)
+            .attr("class", d => `link-${d.type}`)
+            ;
 
         // Создание узлов
         const node = svg.append("g")
