@@ -11,12 +11,13 @@ def process_full_name(full_name: str):
 
 def load_data(nodes_file: str, edges_file: str):
     nodes = [
-        dict(
+        {
             **{'id': index},
             **process_full_name(row['full_name']),
-            **row
-        )
-        for index, row in pd.read_csv(nodes_file, sep = ';').iterrows()
+            **row,
+            **{'tags': row['tags'].split(',')}
+        }
+        for index, row in pd.read_csv(nodes_file, sep = ';').astype(str).iterrows()
     ]
     groups = {node['group'] for node in nodes}
     group2id = {group: group_id for group_id, group in enumerate(list(groups))}
@@ -36,11 +37,12 @@ def load_data(nodes_file: str, edges_file: str):
     return nodes, edges
 
 def format_pair(key: str, value: str) -> str:
-    try:
-        value = int(value)
+    if isinstance(value, int):
         return f'{key}: {value}'
-    except:
-        return f'{key}: \"{value}\"'
+    if isinstance(value, list):
+        value_str = ', '.join(f'"{x}"' for x in value)
+        return f'{key}: [{value_str}]'
+    return f'{key}: \"{value}\"'
 
 def build_js_string(nodes, edges):
     nodes_str = ",\n".join(
