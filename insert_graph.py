@@ -15,7 +15,7 @@ def load_data(nodes_file: str, edges_file: str):
             **{'id': index},
             **process_full_name(row['full_name']),
             **row,
-            **{'tags': row['tags'].split(',')}
+            **{'tags': [x for x in row['tags'].split(',') if x != 'nan']}
         }
         for index, row in pd.read_csv(nodes_file, sep = ';').astype(str).iterrows()
     ]
