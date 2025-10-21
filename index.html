@@ -185,57 +185,38 @@
             .attr("class", d => `link-${d.type}`)
             ;
 
-        // Создание узлов
-        // const node = svg.append("g")
-        //     .attr("class", "nodes")
-        //     .selectAll("circle")
-        //     .data(graph.nodes)
-        //     .enter().append("circle")
-        //     .attr("class", "node")
-        //     .attr("r", 10)
-        //     .attr("fill", d => d3.schemeCategory10[d.group_id])
-        //     .call(
-        //         d3.drag()
-        //         .on("start", dragstarted)
-        //         .on("drag", dragged)
-        //         .on("end", dragended)
-        //     );
-
-
 
         const node = svg.append("g")
             .selectAll("g")
             .data(graph.nodes)
             .enter().append("g")
             .attr("class", "node")
-            .attr("node-id", d => d.id)
+            // .attr("node-id", d => d.id)
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended));
 
         node.append("circle")
-            .attr("r", 20)
+            .attr("r", 25)
             .attr("fill", "#fff")
             .attr("stroke", d => d3.schemeCategory10[d.group_id])
             .attr("stroke-width", 5);
 
         node.append("image")
             .attr("xlink:href", "images/img.png")
-            .attr("x", -20)
-            .attr("y", -20)
-            .attr("width", 40)
-            .attr("height", 40)
-            .attr("clip-path", "circle(20px)")
+            .attr("x", -25)
+            .attr("y", -25)
+            .attr("width", 50)
+            .attr("height", 50)
+            .attr("clip-path", "circle(24px)")
             .on("error", function(d) {
                 console.log("Не удалось загрузить: Изображение");
             })
             .on("load", function() {
                 console.log("Изображение успешно загружено");
             })
-        ;
-
-
+        
 
 
         // Добавление подписей
@@ -247,10 +228,12 @@
             .text(d => d.abr_name)
             .attr("font-size", 14)
             .attr("dx", 0)
-            .attr("dy", 20)
+            .attr("dy", 35)
             .attr("text-anchor", "middle")
             .style("pointer-events", "none") // Чтобы текст не мешал взаимодействию
         ;
+
+
 
         // Функции для drag&drop
         function dragstarted(event, d) {
