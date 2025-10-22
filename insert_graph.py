@@ -63,7 +63,7 @@ def build_js_string(nodes, edges):
     )
 
 if __name__ == '__main__':
-    nodes, edges = load_data('nodes.csv', 'edges.csv')
+    nodes, edges = load_data('graph_data/nodes.csv', 'graph_data/edges.csv')
     output_str = build_js_string(nodes, edges)
 
     with open('index.html', 'r') as f:
