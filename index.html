@@ -9,6 +9,7 @@
         stroke-width: 1.5px;
         cursor: pointer;
         r: 20;
+        transition: opacity 0.3s ease;
     }
 
     .node:hover {
@@ -21,22 +22,31 @@
         stroke-width: 3px;
     }
 
+    .node-dim {
+        opacity: 0.2;
+    }
+
     .link {
         stroke: #999;
         stroke-opacity: 0.6;
+        transition: opacity 0.3s ease;
+    }
+
+    .link-dim {
+        stroke-opacity: 0.1;
     }
 
     /* Стили для разных типов связей */
     .link-friend-1 {
         stroke: #999;
-        stroke-width: 3.0px;
+        stroke-width: 2.0px;
         stroke-dasharray: 5,5;
         opacity: 1;
     }
 
     .link-friend-2 {
         stroke: #999;
-        stroke-width: 1.0px;
+        stroke-width: 1.5px;
         stroke-dasharray: 5,5;
         opacity: 0.6;
     }
@@ -191,34 +201,25 @@
             .data(graph.nodes)
             .enter().append("g")
             .attr("class", "node")
-            // .attr("node-id", d => d.id)
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
-                .on("end", dragended));
-
+                .on("end", dragended)
+            );
         node.append("circle")
             .attr("r", 25)
             .attr("fill", "#fff")
             .attr("stroke", d => d3.schemeCategory10[d.group_id])
             .attr("stroke-width", 5);
-
         node.append("image")
             .attr("xlink:href", d => getNodeImage(d.img))
             .attr("x", -25)
             .attr("y", -25)
             .attr("width", 50)
             .attr("height", 50)
-            .attr("clip-path", "circle(24px)")
-            .on("error", function(d) {
-                console.log("Не удалось загрузить: Изображение");
-            })
-            .on("load", function() {
-                console.log("Изображение успешно загружено");
-            })
-        
+            .attr("clip-path", "circle(24px)");
         function getNodeImage(filename) {
-            if (filename === "nan") return "images/default.png";
+            if (filename === "nan" || filename === "") return "images/default.png";
             return "images/" + filename;
         }
 
@@ -264,10 +265,6 @@
                 .attr("x2", d => d.target.x)
                 .attr("y2", d => d.target.y);
 
-            // node
-            //     .attr("cx", d => d.x)
-            //     .attr("cy", d => d.y);
-
             node.attr("transform", d => `translate(${d.x},${d.y})`);
 
             label
@@ -289,7 +286,7 @@
                 // Первый клик - выбираем узел
                 selectedNode = d;
                 node.classed("selected", false);
-                d3.select(this).classed("selected", true).attr("r", 14);
+                d3.select(this).classed("selected", true).attr("r", 30);
                 showNodeInfo(d);
 
                 // Подсвечиваем смежные узлы
@@ -369,20 +366,23 @@
         node.attr("node-id", d => d.id);
 
         // Скрытие при нажатии ESC
-        d3.select("body").on("keydown", function(event) {
+        d3.select("body")
+            .on("keydown", function(event) {
             if (event.key === "Escape") {
                 resetSelection();
             }
-        });
+            });
 
         // Функция сброса выделения
         function resetSelection() {
+            node.classed("node-dim", false);
+            link.classed("link-dim", false);
+
             selectedNode = null;
             selectedLink = null;
 
             node.classed("node-highlight", false)
-                .classed("selected", false)
-                .attr("r", 12);
+                .classed("selected", false);
 
             link.classed("link-highlight", false);
 
@@ -440,37 +440,18 @@
 
         // Функция для фильтрации узлов по тегам
         function filterNodesByTag(tag) {
-            // Сбрасываем предыдущую фильтрацию
-            node.style("opacity", 1);
-            link.style("opacity", 0.2);
+            node.classed("node-dim", false);
+            link.classed("link-dim", false);
 
-            // Находим узлы с указанным тегом
-            const taggedNodes = graph.nodes.filter(node =>
-                node.tags.includes(tag)
-            );
+            const nonTaggedNodes = graph.nodes.filter(node => !node.tags.includes(tag));
+            const nonTaggedNodesIds = new Set(nonTaggedNodes.map(n => n.id));
 
-            const taggedNodeIds = new Set(taggedNodes.map(n => n.id));
+            node.filter(d => nonTaggedNodesIds.has(d.id))
+                .classed("node-dim", true);
 
-            // Подсвечиваем узлы с тегом
-            node.filter(d => taggedNodeIds.has(d.id))
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-                .attr("r", 20);
-
-            node.filter(d => !taggedNodeIds.has(d.id))
-                .transition()
-                .duration(500)
-                .style("opacity", 0.3)
-                .attr("r", 8);
-
-            // Подсвечиваем связи между подсвеченными узлами
-            link.filter(d =>
-                taggedNodeIds.has(d.source.id) && taggedNodeIds.has(d.target.id)
-            )
-            .transition()
-            .duration(500)
-            .style("opacity", 1);
+            link.filter(d => nonTaggedNodesIds.has(d.source.id) ||
+                             nonTaggedNodesIds.has(d.target.id))
+                .classed("link-dim", true);
         }
 
 
