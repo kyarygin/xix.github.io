@@ -23,7 +23,7 @@
     }
 
     .node-dim {
-        opacity: 0.2;
+        opacity: 0.1;
     }
 
     .link {
@@ -282,33 +282,38 @@
         node.on("click", function(event, d) {
             event.stopPropagation();
 
-            if (selectedNode === null) {
-                // Первый клик - выбираем узел
+            if (selectedNode === null && !node.classed("node-dim")) {
+                
                 selectedNode = d;
                 node.classed("selected", false);
-                d3.select(this).classed("selected", true).attr("r", 30);
+                // d3.select(this).classed("selected", true).attr("r", 30);
                 showNodeInfo(d);
 
-                // Подсвечиваем смежные узлы
                 const connectedNodeIds = new Set();
                 graph.links.forEach(link => {
                     if (link.source.id === d.id) connectedNodeIds.add(link.target.id);
                     if (link.target.id === d.id) connectedNodeIds.add(link.source.id);
                 });
 
-                node.filter(node => connectedNodeIds.has(node.id))
-                    .classed("node-highlight", true);
+                node.filter(node => !connectedNodeIds.has(node.id) && node.id != selectedNode.id)
+                    .classed("node-dim", true);
+
+                link.filter(link => link.source.id != d.id && link.target.id != d.id)
+                    .classed("link-dim", true);
+
 
             } else if (selectedNode.id !== d.id) {
                 // Второй клик на другом узле - показываем связь
-                const linkData = getLinkBetweenNodes(selectedNode.id, d.id);
-                if (linkData) {
-                    selectedLink = linkData;
-                    showLinkInfo(linkData, selectedNode, d);
+                const selectedLink = graph.links.find(link =>
+                    (link.source.id === selectedNode.id && link.target.id === d.id) ||
+                    (link.target.id === selectedNode.id && link.source.id === d.id)
+                );
+                if (selectedLink) {
+                    showLinkInfo(selectedLink, selectedNode, d);
 
                     // Подсвечиваем связь
                     link.classed("link-highlight", false);
-                    link.filter(l => l === linkData)
+                    link.filter(l => l === selectedLink)
                         .classed("link-highlight", true);
                 }
             }
@@ -387,14 +392,6 @@
             link.classed("link-highlight", false);
 
             sideTooltip.classed("visible", false);
-        }
-
-        // Функция для получения связи между двумя узлами
-        function getLinkBetweenNodes(node1Id, node2Id) {
-            return graph.links.find(link =>
-                (link.source.id === node1Id && link.target.id === node2Id) ||
-                (link.source.id === node2Id && link.target.id === node1Id)
-            );
         }
 
         function createListControls() {
