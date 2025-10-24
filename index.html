@@ -26,6 +26,11 @@
         opacity: 0.1;
     }
 
+    .label-dim {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
     .link {
         stroke: #999;
         stroke-opacity: 0.6;
@@ -195,7 +200,6 @@
             .attr("class", d => `link-${d.type}`)
             ;
 
-
         const node = svg.append("g")
             .selectAll("g")
             .data(graph.nodes)
@@ -223,21 +227,26 @@
             return "images/" + filename;
         }
 
-        // Добавление подписей
         const label = svg.append("g")
-            .attr("class", "labels")
-            .selectAll("text")
+            .selectAll("g")
             .data(graph.nodes)
-            .enter().append("text")
+            .enter().append("g")
+            .attr("class", "label-group")
+            .style("pointer-events", "none");
+        label.append("rect")
+            .attr("class", "label-bg")
+            .attr("rx", 4) // Закругленные углы
+            .attr("ry", 4)
+            .attr("fill", "white")
+            // .attr("fill-opacity", 0.8)
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 1);
+        label.append("text")
             .text(d => d.abr_name)
-            .attr("font-size", 14)
-            .attr("dx", 0)
-            .attr("dy", 35)
+            .attr("class", "node-label")
             .attr("text-anchor", "middle")
-            .style("pointer-events", "none") // Чтобы текст не мешал взаимодействию
-        ;
-
-
+            .attr("dy", 35)
+            .attr("font-size", 14);
 
         // Функции для drag&drop
         function dragstarted(event, d) {
@@ -266,10 +275,11 @@
                 .attr("y2", d => d.target.y);
 
             node.attr("transform", d => `translate(${d.x},${d.y})`);
+            label.attr("transform", d => `translate(${d.x},${d.y})`);
 
-            label
-                .attr("x", d => d.x)
-                .attr("y", d => d.y);
+            // label
+            //     .attr("x", d => d.x)
+            //     .attr("y", d => d.y);
 
         });
 
@@ -368,7 +378,6 @@
             sideTooltip.classed("visible", true);
         }
 
-        node.attr("node-id", d => d.id);
 
         // Скрытие при нажатии ESC
         d3.select("body")
@@ -437,23 +446,66 @@
 
         // Функция для фильтрации узлов по тегам
         function filterNodesByTag(tag) {
-            node.classed("node-dim", false);
-            link.classed("link-dim", false);
+            setDimValueNodeAll(false);
+            setDimValueLinkAll(false)
 
             const nonTaggedNodes = graph.nodes.filter(node => !node.tags.includes(tag));
             const nonTaggedNodesIds = new Set(nonTaggedNodes.map(n => n.id));
 
-            node.filter(d => nonTaggedNodesIds.has(d.id))
-                .classed("node-dim", true);
+            graph.links
+                .filter(l => nonTaggedNodesIds.has(l.source.id) ||
+                             nonTaggedNodesIds.has(l.target.id))
+                .forEach(l => setDimValueLink(l, true));
 
-            link.filter(d => nonTaggedNodesIds.has(d.source.id) ||
-                             nonTaggedNodesIds.has(d.target.id))
-                .classed("link-dim", true);
+            graph.nodes
+                .filter(n => nonTaggedNodesIds.has(n.id))
+                .forEach(n => setDimValueNode(n, true));
         }
 
 
+        function setDimValueNode(targetNode, value) {
+            node.filter(d => targetNode === d)
+                .classed("node-dim", value);
+
+            d3.selectAll(".label-group")
+                .filter(d => targetNode === d)
+                .classed("label-dim", value);
+        }
+
+        function setDimValueNodeAll(value) {
+            node.classed("node-dim", value);
+            d3.selectAll(".label-group")
+                .classed("label-dim", value);
+        }
+
+        function setDimValueLink(targetLink, value) {
+            link.filter(l => l === targetLink)
+                .classed("link-dim", value);
+        }
+
+        function setDimValueLinkAll(value) {
+            link.classed("link-dim", value);
+        }
+
         // Тестируем
         createListControls();
+
+        function updateLabelBackgrounds() {
+            label.select(".label-bg")
+                .each(function(d) {
+                    const textElement = this.nextSibling; // Следующий элемент - текст
+                    const bbox = textElement.getBBox();
+
+                    d3.select(this)
+                        .attr("x", bbox.x - 4) // Отступы
+                        .attr("y", bbox.y - 2)
+                        .attr("width", bbox.width + 8)
+                        .attr("height", bbox.height + 4);
+                });
+        }
+
+        // Вызываем после создания и при обновлении
+        setTimeout(updateLabelBackgrounds, 10);
 
 
     </script>
