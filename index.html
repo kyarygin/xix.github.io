@@ -182,7 +182,7 @@
         // Инициализация симуляции
         const simulation = d3.forceSimulation(graph.nodes)
             .force("link", d3.forceLink(graph.links).id(d => d.id).distance(100))
-            .force("charge", d3.forceManyBody().strength(-300))
+            .force("charge", d3.forceManyBody().strength(-400))
             .force("center", d3.forceCenter(width / 2, height / 2));
 
         const tooltip = d3.select("body")
@@ -190,15 +190,12 @@
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        // Создание линий (рёбра)
         const link = svg.append("g")
-            // .attr("class", d => `link`)
             .selectAll("line")
             .data(graph.links)
             .enter().append("line")
             .attr("stroke-width", 2)
-            .attr("class", d => `link-${d.type}`)
-            ;
+            .attr("class", d => `link-${d.type}`);
 
         const node = svg.append("g")
             .selectAll("g")
@@ -238,7 +235,6 @@
             .attr("rx", 4) // Закругленные углы
             .attr("ry", 4)
             .attr("fill", "white")
-            // .attr("fill-opacity", 0.8)
             .attr("stroke", "#ccc")
             .attr("stroke-width", 1);
         label.append("text")
@@ -276,11 +272,6 @@
 
             node.attr("transform", d => `translate(${d.x},${d.y})`);
             label.attr("transform", d => `translate(${d.x},${d.y})`);
-
-            // label
-            //     .attr("x", d => d.x)
-            //     .attr("y", d => d.y);
-
         });
 
         // Переменные для отслеживания состояния
@@ -296,32 +287,33 @@
                 
                 selectedNode = d;
                 node.classed("selected", false);
-                // d3.select(this).classed("selected", true).attr("r", 30);
-                showNodeInfo(d);
+                showNodeInfo(selectedNode);
 
                 const connectedNodeIds = new Set();
                 graph.links.forEach(link => {
-                    if (link.source.id === d.id) connectedNodeIds.add(link.target.id);
-                    if (link.target.id === d.id) connectedNodeIds.add(link.source.id);
+                    if (link.source.id === selectedNode.id) connectedNodeIds.add(link.target.id);
+                    if (link.target.id === selectedNode.id) connectedNodeIds.add(link.source.id);
                 });
 
-                node.filter(node => !connectedNodeIds.has(node.id) && node.id != selectedNode.id)
-                    .classed("node-dim", true);
+                graph.nodes
+                    .filter(n => !connectedNodeIds.has(n.id) && n.id != selectedNode.id)
+                    .forEach(n => setDimValueNode(n, true));
 
-                link.filter(link => link.source.id != d.id && link.target.id != d.id)
-                    .classed("link-dim", true);
+                graph.links
+                    .filter(l => l.source.id != selectedNode.id && l.target.id != selectedNode.id)
+                    .forEach(l => setDimValueLink(l, true));
 
 
             } else if (selectedNode.id !== d.id) {
+
                 // Второй клик на другом узле - показываем связь
-                const selectedLink = graph.links.find(link =>
-                    (link.source.id === selectedNode.id && link.target.id === d.id) ||
-                    (link.target.id === selectedNode.id && link.source.id === d.id)
+                const selectedLink = graph.links.find(l =>
+                    (l.source.id === selectedNode.id && l.target.id === d.id) ||
+                    (l.target.id === selectedNode.id && l.source.id === d.id)
                 );
                 if (selectedLink) {
                     showLinkInfo(selectedLink, selectedNode, d);
 
-                    // Подсвечиваем связь
                     link.classed("link-highlight", false);
                     link.filter(l => l === selectedLink)
                         .classed("link-highlight", true);
@@ -389,8 +381,8 @@
 
         // Функция сброса выделения
         function resetSelection() {
-            node.classed("node-dim", false);
-            link.classed("link-dim", false);
+            setDimValueLinkAll(false);
+            setDimValueNodeAll(false);
 
             selectedNode = null;
             selectedLink = null;
@@ -464,22 +456,27 @@
 
 
         function setDimValueNode(targetNode, value) {
-            node.filter(d => targetNode === d)
+            node
+                .filter(d => targetNode === d)
                 .classed("node-dim", value);
 
-            d3.selectAll(".label-group")
+            d3
+                .selectAll(".label-group")
                 .filter(d => targetNode === d)
                 .classed("label-dim", value);
         }
 
         function setDimValueNodeAll(value) {
             node.classed("node-dim", value);
-            d3.selectAll(".label-group")
+
+            d3
+                .selectAll(".label-group")
                 .classed("label-dim", value);
         }
 
         function setDimValueLink(targetLink, value) {
-            link.filter(l => l === targetLink)
+            link
+                .filter(l => l === targetLink)
                 .classed("link-dim", value);
         }
 
