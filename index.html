@@ -208,13 +208,13 @@
         };
 
         const group2color = {
-            "Художники": "#0e7a0d",
+            "Художники": "#0485ff",
             "Меценаты": "#d3af37",
             "Композиторы и музыканты": "#B32134",
-            "Врачи и учёные": "#0485ff",
+            "Врачи и учёные": "#0e7a0d",
             "Архитекторы": "#f07f5e",
             "Критики": "#895200",
-            "Скульпторы": "#4c2882"
+            "Скульпторы": "#d859dc"
         };
 
         const width = 1600, height = 800;
@@ -463,7 +463,6 @@
                                         ${tag}
                                     </button>
                                 `).join('')}
-
                                 ${allGroups.map(group => `
                                     <button onclick="filterNodesByGroup('${group}')"
                                             style="color: black; border: 1px solid ${group2color[group]};
