@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>D3 TEST</title>
+    <title>Русская художественная культура в конце XIX — начале ХХ в.</title>
     <style>
     .node-container {
         --node-size: 30px;
@@ -29,7 +29,6 @@
     .node-container.highlight {
         --node-size: 37px;
         filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 1));
-        z-index: 10000;
     }
     .node-container.dim {
         opacity: 0.2;
@@ -71,7 +70,6 @@
     }
     .label-container.highlight {
         --bg-opacity: 1;
-        z-index: 10000;
     }
 
 
@@ -81,46 +79,46 @@
         stroke-width: 3.0px;
         transition: opacity 0.3s ease;
     }
-
     .link.dim {
-        stroke-opacity: 0.1;
+        stroke-opacity: 0.1 !important;
     }
     .link.highlight {
         stroke-opacity: 1 !important;
-        stroke-width: 5px !important;
+        stroke-width: 3px !important;
+        stroke: #922 !important;
     }
     /* Стили для разных типов связей */
     .link[data-type="friend-1"] {
         stroke: #999;
         stroke-width: 2.0px;
         stroke-dasharray: 5,5;
-        opacity: 1;
+        stroke-opacity: 0.6;
     }
 
     .link[data-type="friend-2"] {
         stroke: #999;
         stroke-width: 1.5px;
         stroke-dasharray: 5,5;
-        opacity: 0.6;
+        stroke-opacity: 0.4;
     }
 
     .link[data-type="friend-3"] {
         stroke: #999;
         stroke-width: 1.0px;
         stroke-dasharray: 5,5;
-        opacity: 0.2;
+        stroke-opacity: 0.2;
     }
 
     .link[data-type="apprentice"] {
         stroke: #999;
-        stroke-width: 3.0px;
-        opacity: 1;
+        stroke-width: 2.0px;
+        stroke-opacity: 0.6;
     }
 
     .link[data-type="family"] {
-        stroke: #db4500;
-        stroke-width: 3.0px;
-        opacity: 0.9;
+        stroke: #999;
+        stroke-width: 2.0px;
+        stroke-opacity: 0.6;
     }
 
     .side-tooltip {
