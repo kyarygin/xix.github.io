@@ -28,10 +28,10 @@
     }
     .node-container.highlight {
         --node-size: 37px;
-        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 1));
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.9));
     }
     .node-container.dim {
-        opacity: 0.2;
+        opacity: 0.1;
     }
 
     .label-container {
@@ -86,6 +86,7 @@
         stroke-opacity: 1 !important;
         stroke-width: 3px !important;
         stroke: #922 !important;
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 1)) !important;
     }
     /* Стили для разных типов связей */
     .link[data-type="friend-1"] {
@@ -128,10 +129,10 @@
         transform: translateY(-50%);
         width: 300px;
         background: rgba(255, 255, 255, 0.95);
-        border: 1px solid #ccc;
+        border: 1px solid white;
         border-radius: 8px;
         padding: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         font-family: Arial, sans-serif;
         font-size: 14px;
         z-index: 1000;
@@ -139,6 +140,7 @@
         transition: opacity 0.3s ease;
         max-height: 80vh;
         overflow-y: auto;
+        pointer-events: none;
     }
 
     .side-tooltip.visible {
@@ -168,20 +170,20 @@
         // Данные графа
         const graph = {
             nodes: [
-                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "mamontov_si.png", group: "Меценат", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Мамонтов", group_id: 3},
-                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "polenov_vd.png", group: "Художник", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Поленов", group_id: 4},
-                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "polenova_ed.png", group: "Художник", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский кружок"], description: "Описание Поленова", group_id: 4},
-                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "repin_ie.png", group: "Художник", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский кружок"], description: "Описание Репин", group_id: 4},
-                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "korovin_ka.png", group: "Художник", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Союз русских художников"], description: "Описание Коровин", group_id: 4},
-                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "serov_vi.png", group: "Художник", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Мирискусники"], description: "Описание Серов", group_id: 4},
-                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "vrubel_ma.png", group: "Художник", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Врубель", group_id: 4},
-                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", tags: ["Мамонтовская опера"], description: "Описание Рахманинов", group_id: 0},
-                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "rimsky-korsakov_na.png", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Мамонтовская опера"], description: "Описание Римский-Корсаков", group_id: 0},
-                {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", img: "antokolsky_mm.png", group: "Скульптор", full_name: "Марк Матвеевич Антокольский", tags: ["Абрамцевский кружок"], description: "nan", group_id: 2},
-                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "gartman_va.png", group: "Архитектор", full_name: "Виктор Александрович Гартман", tags: [], description: "nan", group_id: 5},
-                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "botkin_sp.png", group: "Ученый", full_name: "Сергей Петрович Боткин", tags: [], description: "nan", group_id: 1},
-                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "ivanov_mm.png", group: "Критик", full_name: "Михаил Михайлович Иванов", tags: [], description: "nan", group_id: 6},
-                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "prahov_av.png", group: "Критик", full_name: "Адриан Викторович Прахов", tags: [], description: "nan", group_id: 6}
+                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "mamontov_si.png", group: "Меценаты", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Мамонтов", group_id: 6},
+                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "polenov_vd.png", group: "Художники", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Поленов", group_id: 0},
+                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "polenova_ed.png", group: "Художники", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский кружок"], description: "Описание Поленова", group_id: 0},
+                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "repin_ie.png", group: "Художники", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский кружок"], description: "Описание Репин", group_id: 0},
+                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "korovin_ka.png", group: "Художники", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Союз русских художников"], description: "Описание Коровин", group_id: 0},
+                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "serov_vi.png", group: "Художники", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Мирискусники"], description: "Описание Серов", group_id: 0},
+                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "vrubel_ma.png", group: "Художники", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Врубель", group_id: 0},
+                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Композиторы и музыканты", full_name: "Сергей Васильевич Рахманинов", tags: ["Мамонтовская опера"], description: "Описание Рахманинов", group_id: 4},
+                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "rimsky-korsakov_na.png", group: "Композиторы и музыканты", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Мамонтовская опера"], description: "Описание Римский-Корсаков", group_id: 4},
+                {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", img: "antokolsky_mm.png", group: "Скульпторы", full_name: "Марк Матвеевич Антокольский", tags: ["Абрамцевский кружок"], description: "nan", group_id: 1},
+                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "gartman_va.png", group: "Архитекторы", full_name: "Виктор Александрович Гартман", tags: [], description: "nan", group_id: 3},
+                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "botkin_sp.png", group: "Врачи и учёные", full_name: "Сергей Петрович Боткин", tags: [], description: "nan", group_id: 5},
+                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "ivanov_mm.png", group: "Критики", full_name: "Михаил Михайлович Иванов", tags: [], description: "nan", group_id: 2},
+                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "prahov_av.png", group: "Критики", full_name: "Адриан Викторович Прахов", tags: [], description: "nan", group_id: 2}
             ],
             links: [
                 {source: 0, target: 1, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
@@ -205,7 +207,18 @@
             ]
         };
 
+        const group2color = {
+            "Художники": "#0e7a0d",
+            "Меценаты": "#d3af37",
+            "Композиторы и музыканты": "#B32134",
+            "Врачи и учёные": "#0485ff",
+            "Архитекторы": "#f07f5e",
+            "Критики": "#895200",
+            "Скульпторы": "#4c2882"
+        };
+
         const width = 1600, height = 800;
+        // const width = 2000, height = 1000;
 
         // Создание SVG
         const svg = d3.select("#graph")
@@ -247,7 +260,7 @@
             );
         node.append("circle")
             .attr("class", "node-circle")
-            .attr("fill", d => d3.schemeCategory10[d.group_id]);
+            .attr("fill", d => group2color[d.group]);
         node.append("image")
             .attr("class", "node-image")
             .attr("xlink:href", d => {
@@ -360,12 +373,6 @@
 
         // Функция для показа бокового tooltip
         function showNodeInfo(d) {
-            // Подсвечиваем узел
-            // node.classed("node-container.highlight", false);
-
-            // d3.select(`circle[node-id="${d.id}"]`).classed("node-container.highlight", true);
-
-            // Заполняем tooltip содержимым
             sideTooltip.html(`
                 <div class="tooltip-header">
                     <h2 style="margin: 0; color: #2c3e50;">${d.full_name}</h2>
@@ -374,7 +381,6 @@
                 <div class="tooltip-content">
                     <div class="stats-grid">
                         <div class="stat-item">
-                            <div style="font-size: 11px; color: #7f8c8d;">description</div>
                             <div style="font-size: 14px; font-weight: bold; color: #34495e;">${d.description}</div>
                         </div>
                     </div>
@@ -418,12 +424,8 @@
             setValueNodes("highlight", false);
 
             selectedNode = null;
+            selectedNode2 = null;
             selectedLink = null;
-
-            // node.classed("node-container.highlight", false)
-            //     .classed("selected", false);
-
-            // link.classed("link-highlight", false);
 
             sideTooltip.classed("visible", false);
         }
@@ -433,6 +435,7 @@
             console.log("Создаем панель управления...");
 
             const allTags = [...new Set(graph.nodes.flatMap(node => node.tags))];
+            const allGroups = [...new Set(graph.nodes.flatMap(node => node.group))];
 
             // Создаем самый простой вариант
             const controls = d3.select("body")
@@ -445,28 +448,35 @@
                         background: white;
                         padding: 20px;
                         border-radius: 10px;
+                        width: 300px;
                         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
                         z-index: 10000;
-                        border: 1px solid black;
+                        border: 1px solid white;
                     ">
                         <div style="margin-bottom: 15px;">
                             <h4 style="margin: 0 0 8px 0; font-size: 16px;">Общества, объединения, кружки</h4>
                             <div style="display: flex; flex-wrap: wrap; gap: 5px;">
                                 ${allTags.map(tag => `
                                     <button onclick="filterNodesByTag('${tag}')"
-                                            style="color: black; border: none;
+                                            style="color: black; border: 1px solid white;
                                                    padding: 4px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">
                                         ${tag}
                                     </button>
                                 `).join('')}
+
+                                ${allGroups.map(group => `
+                                    <button onclick="filterNodesByGroup('${group}')"
+                                            style="color: black; border: 1px solid ${group2color[group]};
+                                                   padding: 4px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">
+                                        ${group}
+                                    </button>
+                                `).join('')}
+
                             </div>
                         </div>
 
                     </div>
                 `);
-
-
-            console.log("Панель создана");
         }
 
         // Функция для фильтрации узлов по тегам
@@ -484,6 +494,23 @@
 
             graph.nodes
                 .filter(n => nonTaggedNodesIds.has(n.id))
+                .forEach(n => setValueNode(n, "dim", true));
+        }
+
+        function filterNodesByGroup(group) {
+            setValueNodes("dim", false);
+            setValueLinks("dim", false)
+
+            const nonGroupNodes = graph.nodes.filter(node => node.group != group);
+            const nonGroupNodesIds = new Set(nonGroupNodes.map(n => n.id));
+
+            graph.links
+                .filter(l => nonGroupNodesIds.has(l.source.id) ||
+                             nonGroupNodesIds.has(l.target.id))
+                .forEach(l => setValueLink(l, "dim", true));
+
+            graph.nodes
+                .filter(n => nonGroupNodesIds.has(n.id))
                 .forEach(n => setValueNode(n, "dim", true));
         }
 
