@@ -4,86 +4,123 @@
     <meta charset="utf-8" />
     <title>D3 TEST</title>
     <style>
-    .node {
-        stroke: #fff;
-        stroke-width: 1.5px;
+    .node-container {
+        --node-size: 30px;
+        --image-size: calc(var(--node-size) * 2);
+        --image-offset: calc(var(--image-size) / 2);
+        --scale: 1;
+
+        transition: opacity 0.3s ease;
         cursor: pointer;
-        r: 20;
+    }
+    .node-circle {
+        r: var(--node-size);
+        transition: inherit;
+
+    }
+    .node-image {
+        width: var(--image-size);
+        height: var(--image-size);
+        x: calc(-1 * var(--image-offset));
+        y: calc(-1 * var(--image-offset));
+        clip-path: circle(calc(var(--image-offset) - 3px));
+        transition: inherit;
+    }
+    .node-container.highlight {
+        --node-size: 37px;
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 1));
+        z-index: 10000;
+    }
+    .node-container.dim {
+        opacity: 0.2;
+    }
+
+    .label-container {
+        --label-corner-radius: 6px;
+        --label-padding-x: 8px;
+        --label-padding-y: 4px;
+        --label-font-size: 13px;
+        --bg-opacity: 1;
+
+        opacity: 1;
+        pointer-events: none;
+        cursor: pointer;
         transition: opacity 0.3s ease;
     }
+    .label-bg {
+        rx: var(--label-corner-radius);
+        ry: var(--label-corner-radius);
+        fill: rgba(255, 255, 255, var(--bg-opacity));
+        stroke: #cccccc;
+        stroke-width: 1px;
+        transition: inherit;
+        opacity: inherit;
 
-    .node:hover {
-        stroke: #000;
-        stroke-width: 3px;
     }
-
-    .node-highlight {
-        stroke: #000000;
-        stroke-width: 3px;
+    .label-text {
+        font-size: var(--label-font-size);
+        text-anchor: middle;
+        dominant-baseline: central;
+        transition: inherit;
+        opacity: inherit;
+        pointer-events: none;
+        user-select: none;
     }
-
-    .node-dim {
-        opacity: 0.1;
-    }
-
-    .label-dim {
+    .label-container.dim {
         opacity: 0;
-        transition: opacity 0.3s ease;
     }
+    .label-container.highlight {
+        --bg-opacity: 1;
+        z-index: 10000;
+    }
+
 
     .link {
         stroke: #999;
         stroke-opacity: 0.6;
+        stroke-width: 3.0px;
         transition: opacity 0.3s ease;
     }
 
-    .link-dim {
+    .link.dim {
         stroke-opacity: 0.1;
     }
-
+    .link.highlight {
+        stroke-opacity: 1 !important;
+        stroke-width: 5px !important;
+    }
     /* Стили для разных типов связей */
-    .link-friend-1 {
+    .link[data-type="friend-1"] {
         stroke: #999;
         stroke-width: 2.0px;
         stroke-dasharray: 5,5;
         opacity: 1;
     }
 
-    .link-friend-2 {
+    .link[data-type="friend-2"] {
         stroke: #999;
         stroke-width: 1.5px;
         stroke-dasharray: 5,5;
         opacity: 0.6;
     }
 
-    .link-friend-3 {
+    .link[data-type="friend-3"] {
         stroke: #999;
         stroke-width: 1.0px;
         stroke-dasharray: 5,5;
         opacity: 0.2;
     }
 
-    .link-apprentice {
+    .link[data-type="apprentice"] {
         stroke: #999;
         stroke-width: 3.0px;
         opacity: 1;
     }
 
-    .link-family {
+    .link[data-type="family"] {
         stroke: #db4500;
         stroke-width: 3.0px;
         opacity: 0.9;
-    }
-
-
-    .link:hover {
-        stroke: #ff0000;
-        stroke-width: 3px;
-    }
-
-    .link-highlight {
-        stroke-opacity: 1 !important;
-        stroke-width: 5px !important;
     }
 
     .side-tooltip {
@@ -133,20 +170,20 @@
         // Данные графа
         const graph = {
             nodes: [
-                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "nan", group: "Меценат", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Мамонтов", group_id: 4},
-                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "nan", group: "Художник", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Поленов", group_id: 5},
-                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "nan", group: "Художник", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский кружок"], description: "Описание Поленова", group_id: 5},
-                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "nan", group: "Художник", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский кружок"], description: "Описание Репин", group_id: 5},
-                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "nan", group: "Художник", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Союз русских художников"], description: "Описание Коровин", group_id: 5},
-                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "nan", group: "Художник", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Мирискусники"], description: "Описание Серов", group_id: 5},
-                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "nan", group: "Художник", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Врубель", group_id: 5},
-                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", tags: ["Мамонтовская опера"], description: "Описание Рахманинов", group_id: 3},
-                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "nan", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Мамонтовская опера"], description: "Описание Римский-Корсаков", group_id: 3},
-                {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", img: "nan", group: "Скульптор", full_name: "Марк Матвеевич Антокольский", tags: ["Абрамцевский кружок"], description: "nan", group_id: 2},
-                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "nan", group: "Архитектор", full_name: "Виктор Александрович Гартман", tags: [], description: "nan", group_id: 1},
-                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "nan", group: "Ученый", full_name: "Сергей Петрович Боткин", tags: [], description: "nan", group_id: 0},
-                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "nan", group: "Критик", full_name: "Михаил Михайлович Иванов", tags: [], description: "nan", group_id: 6},
-                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "nan", group: "Критик", full_name: "Адриан Викторович Прахов", tags: [], description: "nan", group_id: 6}
+                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "mamontov_si.png", group: "Меценат", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Мамонтов", group_id: 3},
+                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "polenov_vd.png", group: "Художник", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Поленов", group_id: 4},
+                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "polenova_ed.png", group: "Художник", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский кружок"], description: "Описание Поленова", group_id: 4},
+                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "repin_ie.png", group: "Художник", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский кружок"], description: "Описание Репин", group_id: 4},
+                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "korovin_ka.png", group: "Художник", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Союз русских художников"], description: "Описание Коровин", group_id: 4},
+                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "serov_vi.png", group: "Художник", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Мирискусники"], description: "Описание Серов", group_id: 4},
+                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "vrubel_ma.png", group: "Художник", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Врубель", group_id: 4},
+                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Музыкант", full_name: "Сергей Васильевич Рахманинов", tags: ["Мамонтовская опера"], description: "Описание Рахманинов", group_id: 0},
+                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "rimsky-korsakov_na.png", group: "Музыкант", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Мамонтовская опера"], description: "Описание Римский-Корсаков", group_id: 0},
+                {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", img: "antokolsky_mm.png", group: "Скульптор", full_name: "Марк Матвеевич Антокольский", tags: ["Абрамцевский кружок"], description: "nan", group_id: 2},
+                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "gartman_va.png", group: "Архитектор", full_name: "Виктор Александрович Гартман", tags: [], description: "nan", group_id: 5},
+                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "botkin_sp.png", group: "Ученый", full_name: "Сергей Петрович Боткин", tags: [], description: "nan", group_id: 1},
+                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "ivanov_mm.png", group: "Критик", full_name: "Михаил Михайлович Иванов", tags: [], description: "nan", group_id: 6},
+                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "prahov_av.png", group: "Критик", full_name: "Адриан Викторович Прахов", tags: [], description: "nan", group_id: 6}
             ],
             links: [
                 {source: 0, target: 1, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
@@ -181,7 +218,7 @@
 
         // Инициализация симуляции
         const simulation = d3.forceSimulation(graph.nodes)
-            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(100))
+            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(120))
             .force("charge", d3.forceManyBody().strength(-400))
             .force("center", d3.forceCenter(width / 2, height / 2));
 
@@ -190,59 +227,48 @@
             .attr("class", "tooltip")
             .style("opacity", 0);
 
+
         const link = svg.append("g")
             .selectAll("line")
             .data(graph.links)
             .enter().append("line")
-            .attr("stroke-width", 2)
-            .attr("class", d => `link-${d.type}`);
+            .attr("class", "link")
+            .attr("data-type", l => l.type); // Сохраняем тип в data-атрибуте
+            // .classed(l => l.type, true);
+
 
         const node = svg.append("g")
             .selectAll("g")
             .data(graph.nodes)
             .enter().append("g")
-            .attr("class", "node")
+            .attr("class", "node-container")
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended)
             );
         node.append("circle")
-            .attr("r", 25)
-            .attr("fill", "#fff")
-            .attr("stroke", d => d3.schemeCategory10[d.group_id])
-            .attr("stroke-width", 5);
+            .attr("class", "node-circle")
+            .attr("fill", d => d3.schemeCategory10[d.group_id]);
         node.append("image")
-            .attr("xlink:href", d => getNodeImage(d.img))
-            .attr("x", -25)
-            .attr("y", -25)
-            .attr("width", 50)
-            .attr("height", 50)
-            .attr("clip-path", "circle(24px)");
-        function getNodeImage(filename) {
-            if (filename === "nan" || filename === "") return "images/default.png";
-            return "images/" + filename;
-        }
+            .attr("class", "node-image")
+            .attr("xlink:href", d => {
+                if (d.img === "nan" || d.img === "") return "images/default.png";
+                return "images/" + d.img;
+            });
+
 
         const label = svg.append("g")
             .selectAll("g")
             .data(graph.nodes)
             .enter().append("g")
-            .attr("class", "label-group")
-            .style("pointer-events", "none");
+            .attr("class", "label-container");
         label.append("rect")
-            .attr("class", "label-bg")
-            .attr("rx", 4) // Закругленные углы
-            .attr("ry", 4)
-            .attr("fill", "white")
-            .attr("stroke", "#ccc")
-            .attr("stroke-width", 1);
+            .attr("class", "label-bg");
         label.append("text")
             .text(d => d.abr_name)
-            .attr("class", "node-label")
-            .attr("text-anchor", "middle")
-            .attr("dy", 35)
-            .attr("font-size", 14);
+            .attr("class", "label-text")
+            .attr("dy", "35px");
 
         // Функции для drag&drop
         function dragstarted(event, d) {
@@ -283,10 +309,11 @@
         node.on("click", function(event, d) {
             event.stopPropagation();
 
-            if (selectedNode === null && !node.classed("node-dim")) {
+            if (selectedNode === null && !node.classed("node-container.dim")) {
                 
                 selectedNode = d;
-                node.classed("selected", false);
+                setValueNodes("highlight", false);
+                setValueNode(selectedNode, "highlight", true);
                 showNodeInfo(selectedNode);
 
                 const connectedNodeIds = new Set();
@@ -297,43 +324,48 @@
 
                 graph.nodes
                     .filter(n => !connectedNodeIds.has(n.id) && n.id != selectedNode.id)
-                    .forEach(n => setDimValueNode(n, true));
+                    .forEach(n => setValueNode(n, "dim", true));
 
                 graph.links
                     .filter(l => l.source.id != selectedNode.id && l.target.id != selectedNode.id)
-                    .forEach(l => setDimValueLink(l, true));
+                    .forEach(l => setValueLink(l, "dim", true));
 
+            } else if (selectedNode.id !== d.id & !node.classed("node-container.dim")) {
+                selectedNode2 = d;
+                setValueNodes("highlight", false);
+                setValueNode(selectedNode, "highlight", true);
+                setValueNode(selectedNode2, "highlight", true);
 
-            } else if (selectedNode.id !== d.id) {
-
-                // Второй клик на другом узле - показываем связь
+                setValueLinks("highlight", false)
                 const selectedLink = graph.links.find(l =>
                     (l.source.id === selectedNode.id && l.target.id === d.id) ||
                     (l.target.id === selectedNode.id && l.source.id === d.id)
                 );
                 if (selectedLink) {
+                    setValueNode(d, "highlight", true);
+                    setValueLink(selectedLink, "highlight", true)
                     showLinkInfo(selectedLink, selectedNode, d);
-
-                    link.classed("link-highlight", false);
-                    link.filter(l => l === selectedLink)
-                        .classed("link-highlight", true);
                 }
+            } else if (selectedNode.id === d.id) {
+                setValueNodes("highlight", false);
+                setValueLinks("highlight", false);
+                setValueNode(selectedNode, "highlight", true);
+                showNodeInfo(selectedNode);
             }
         });
 
 
         // Сброс подсветки при клике на пустое место
         svg.on("click", () => {
-            node.classed("node-highlight", false);
-            link.classed("link-highlight", false);
             resetSelection();
         });
 
         // Функция для показа бокового tooltip
         function showNodeInfo(d) {
             // Подсвечиваем узел
-            node.classed("node-highlight", false);
-            d3.select(`circle[node-id="${d.id}"]`).classed("node-highlight", true);
+            // node.classed("node-container.highlight", false);
+
+            // d3.select(`circle[node-id="${d.id}"]`).classed("node-container.highlight", true);
 
             // Заполняем tooltip содержимым
             sideTooltip.html(`
@@ -381,16 +413,19 @@
 
         // Функция сброса выделения
         function resetSelection() {
-            setDimValueLinkAll(false);
-            setDimValueNodeAll(false);
+            setValueLinks("dim", false);
+            setValueNodes("dim", false);
+
+            setValueLinks("highlight", false);
+            setValueNodes("highlight", false);
 
             selectedNode = null;
             selectedLink = null;
 
-            node.classed("node-highlight", false)
-                .classed("selected", false);
+            // node.classed("node-container.highlight", false)
+            //     .classed("selected", false);
 
-            link.classed("link-highlight", false);
+            // link.classed("link-highlight", false);
 
             sideTooltip.classed("visible", false);
         }
@@ -438,8 +473,8 @@
 
         // Функция для фильтрации узлов по тегам
         function filterNodesByTag(tag) {
-            setDimValueNodeAll(false);
-            setDimValueLinkAll(false)
+            setValueNodes("dim", false);
+            setValueLinks("dim", false)
 
             const nonTaggedNodes = graph.nodes.filter(node => !node.tags.includes(tag));
             const nonTaggedNodesIds = new Set(nonTaggedNodes.map(n => n.id));
@@ -447,41 +482,43 @@
             graph.links
                 .filter(l => nonTaggedNodesIds.has(l.source.id) ||
                              nonTaggedNodesIds.has(l.target.id))
-                .forEach(l => setDimValueLink(l, true));
+                .forEach(l => setValueLink(l, "dim", true));
 
             graph.nodes
                 .filter(n => nonTaggedNodesIds.has(n.id))
-                .forEach(n => setDimValueNode(n, true));
+                .forEach(n => setValueNode(n, "dim", true));
         }
 
 
-        function setDimValueNode(targetNode, value) {
-            node
+        function setValueNode(targetNode, key, value) {
+            d3
+                .selectAll(".node-container")
                 .filter(d => targetNode === d)
-                .classed("node-dim", value);
+                .classed(key, value);
 
             d3
-                .selectAll(".label-group")
+                .selectAll(".label-container")
                 .filter(d => targetNode === d)
-                .classed("label-dim", value);
+                .classed(key, value);
         }
 
-        function setDimValueNodeAll(value) {
-            node.classed("node-dim", value);
-
+        function setValueNodes(key, value) {
             d3
-                .selectAll(".label-group")
-                .classed("label-dim", value);
+                .selectAll(".node-container")
+                .classed(key, value);
+            d3
+                .selectAll(".label-container")
+                .classed(key, value);
         }
 
-        function setDimValueLink(targetLink, value) {
+        function setValueLink(targetLink, key, value) {
             link
                 .filter(l => l === targetLink)
-                .classed("link-dim", value);
+                .classed(key, value);
         }
 
-        function setDimValueLinkAll(value) {
-            link.classed("link-dim", value);
+        function setValueLinks(key, value) {
+            link.classed(key, value);
         }
 
         // Тестируем
