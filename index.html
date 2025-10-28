@@ -78,8 +78,8 @@
 
     .link {
         stroke: #999;
-        stroke-opacity: 0.6;
-        stroke-width: 3.0px;
+        stroke-opacity: 0.4;
+        stroke-width: 1.0px;
         transition: opacity 0.3s ease;
     }
     .link.dim {
@@ -96,14 +96,14 @@
         stroke: #999;
         stroke-width: 2.0px;
         stroke-dasharray: 5,5;
-        stroke-opacity: 0.6;
+        stroke-opacity: 0.4;
     }
 
     .link[data-type="friend-2"] {
         stroke: #999;
         stroke-width: 1.5px;
         stroke-dasharray: 5,5;
-        stroke-opacity: 0.4;
+        stroke-opacity: 0.3;
     }
 
     .link[data-type="friend-3"] {
@@ -116,13 +116,13 @@
     .link[data-type="apprentice"] {
         stroke: #999;
         stroke-width: 2.0px;
-        stroke-opacity: 0.6;
+        stroke-opacity: 0.4;
     }
 
     .link[data-type="family"] {
         stroke: #999;
         stroke-width: 2.0px;
-        stroke-opacity: 0.6;
+        stroke-opacity: 0.4;
     }
 
     .side-tooltip {
@@ -254,13 +254,14 @@
         const sideTooltip = d3.select("#sideTooltip");
 
         // Инициализация симуляции
+        // https://observablehq.com/@ben-tanen/a-tutorial-to-using-d3-force-from-someone-who-just-learned-ho
         const simulation = d3.forceSimulation(graph.nodes)
-            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(100))
-            .force("charge", d3.forceManyBody().strength(-200))
+            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(150))
+            .force("charge", d3.forceManyBody().strength(-400))
             .force("center", d3.forceCenter(width / 2, height / 2))
             .force("collide", d3.forceCollide()
-                .radius(60) // Радиус столкновения
-                .strength(0.6) // Сила столкновения
+                .radius(40) // Радиус столкновения
+                // .strength(0.6) // Сила столкновения
             );
 
         const tooltip = d3.select("body")
