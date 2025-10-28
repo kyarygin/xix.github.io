@@ -21,8 +21,11 @@
     .node-image {
         width: var(--image-size);
         height: var(--image-size);
-        x: calc(-1 * var(--image-offset));
-        y: calc(-1 * var(--image-offset));
+        /* Fallback для Safari */
+        transform: translate(
+            calc(var(--image-offset) * (-1)),
+            calc(var(--image-offset) * (-1))
+        );
         clip-path: circle(calc(var(--image-offset) - 3px));
         transition: inherit;
     }
@@ -148,7 +151,7 @@
     }
 
     .tooltip-header {
-        border-bottom: 2px solid #3498db;
+        border-bottom: 2px solid #666666;
         padding-bottom: 10px;
         margin-bottom: 15px;
     }
@@ -170,26 +173,33 @@
         // Данные графа
         const graph = {
             nodes: [
-                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "mamontov_si.png", group: "Меценаты", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Мамонтов", group_id: 6},
-                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "polenov_vd.png", group: "Художники", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Поленов", group_id: 0},
-                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "polenova_ed.png", group: "Художники", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский кружок"], description: "Описание Поленова", group_id: 0},
-                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "repin_ie.png", group: "Художники", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский кружок"], description: "Описание Репин", group_id: 0},
-                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "korovin_ka.png", group: "Художники", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Союз русских художников"], description: "Описание Коровин", group_id: 0},
-                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "serov_vi.png", group: "Художники", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский кружок", "Мамонтовская опера", "Мирискусники"], description: "Описание Серов", group_id: 0},
-                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "vrubel_ma.png", group: "Художники", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский кружок", "Мамонтовская опера"], description: "Описание Врубель", group_id: 0},
-                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Композиторы и музыканты", full_name: "Сергей Васильевич Рахманинов", tags: ["Мамонтовская опера"], description: "Описание Рахманинов", group_id: 4},
-                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "rimsky-korsakov_na.png", group: "Композиторы и музыканты", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Мамонтовская опера"], description: "Описание Римский-Корсаков", group_id: 4},
-                {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", img: "antokolsky_mm.png", group: "Скульпторы", full_name: "Марк Матвеевич Антокольский", tags: ["Абрамцевский кружок"], description: "nan", group_id: 1},
-                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "gartman_va.png", group: "Архитекторы", full_name: "Виктор Александрович Гартман", tags: [], description: "nan", group_id: 3},
-                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "botkin_sp.png", group: "Врачи и учёные", full_name: "Сергей Петрович Боткин", tags: [], description: "nan", group_id: 5},
-                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "ivanov_mm.png", group: "Критики", full_name: "Михаил Михайлович Иванов", tags: [], description: "nan", group_id: 2},
-                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "prahov_av.png", group: "Критики", full_name: "Адриан Викторович Прахов", tags: [], description: "nan", group_id: 2}
+                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "mamontov_si.png", group: "Меценаты", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский Художественный Кружок", "Частная Русская Опера"], years: "1841 - 1918", description: "<p>Выдающийся русский предприниматель и меценат, сыгравший ключевую роль в развитии отечественной культуры.</p><p>Главной заслугой Мамонтова стало создание художественного кружка в его подмосковном имении Абрамцево. При его поддержке и участии там работали такие художники, как Виктор Васнецов, Илья Репин, Валентин Серов, Михаил Врубель и многие другие.</p><p>Мамонтов также внёс огромный вклад в музыкальную жизнь, основав в Москве Частную русскую оперу. Его театр открыл миру гений Фёдора Шаляпина и популяризировал творчество композиторов «Могучей кучки». Кроме того, по его инициативе в Абрамцеве были возрождены народные промыслы, включая знаменитую абрамцево-кудринскую резьбу по дереву.</p><p>Савва Мамонтов вошёл в историю как «русский Медичи» - просвещённый покровитель искусств, чья деятельность оставила глубокий след в русской живописи, музыке и театре.</p>", group_id: 1},
+                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "polenov_vd.png", group: "Художники", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский Художественный Кружок", "Частная Русская Опера", "Товарищество Передвижников"], years: "1844 - 1927", description: "Описание Поленов", group_id: 2},
+                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "polenova_ed.png", group: "Художники", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "Описание Поленова", group_id: 2},
+                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "repin_ie.png", group: "Художники", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "Описание Репин", group_id: 2},
+                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "korovin_ka.png", group: "Художники", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский Художественный Кружок", "Частная Русская Опера", "Союз русских художников"], years: "nan", description: "Описание Коровин", group_id: 2},
+                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "serov_vi.png", group: "Художники", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский Художественный Кружок", "Частная Русская Опера", "Мирискусники"], years: "nan", description: "Описание Серов", group_id: 2},
+                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "vrubel_ma.png", group: "Художники", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский Художественный Кружок", "Частная Русская Опера"], years: "nan", description: "Описание Врубель", group_id: 2},
+                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Композиторы и музыканты", full_name: "Сергей Васильевич Рахманинов", tags: ["Частная Русская Опера"], years: "nan", description: "Описание Рахманинов", group_id: 6},
+                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "rimsky-korsakov_na.png", group: "Композиторы и музыканты", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Частная Русская Опера"], years: "nan", description: "Описание Римский-Корсаков", group_id: 6},
+                {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", img: "antokolsky_mm.png", group: "Скульпторы", full_name: "Марк Матвеевич Антокольский", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "nan", group_id: 4},
+                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "gartman_va.png", group: "Архитекторы", full_name: "Виктор Александрович Гартман", tags: [], years: "nan", description: "nan", group_id: 5},
+                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "botkin_sp.png", group: "Врачи и учёные", full_name: "Сергей Петрович Боткин", tags: [], years: "nan", description: "nan", group_id: 0},
+                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "ivanov_mm.png", group: "Критики", full_name: "Михаил Михайлович Иванов", tags: [], years: "nan", description: "nan", group_id: 3},
+                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "prahov_av.png", group: "Критики", full_name: "Адриан Викторович Прахов", tags: [], years: "nan", description: "nan", group_id: 3},
+                {id: 14, short_name: "Виктор Васнецов", abr_name: "В.М. Васнецов", img: "vasnetsov_vm.png", group: "Художники", full_name: "Виктор Михайлович Васнецов", tags: ["Абрамцевский Художественный Кружок", "Частная Русская Опера"], years: "nan", description: "nan", group_id: 2},
+                {id: 15, short_name: "Апполинарий Васнецов", abr_name: "А.М. Васнецов", img: "vasnetsov_am.png", group: "Художники", full_name: "Апполинарий Михайлович Васнецов", tags: [], years: "nan", description: "nan", group_id: 2},
+                {id: 16, short_name: "Исаак Левитан", abr_name: "И.И. Левитан", img: "levitan_ii.png", group: "Художники", full_name: "Исаак Ильич Левитан", tags: [], years: "1860 - 1900", description: "nan", group_id: 2},
+                {id: 17, short_name: "Алексей Саврасов", abr_name: "А.К. Саврасов", img: "nan", group: "Художники", full_name: "Алексей Кондратьевич Саврасов", tags: ["Товарищество Передвижников"], years: "1830 - 1897", description: "nan", group_id: 2},
+                {id: 18, short_name: "Василий Перов", abr_name: "В.Г. Перов", img: "nan", group: "Художники", full_name: "Василий Григорьевич Перов", tags: ["Товарищество Передвижников"], years: "1833 - 1882", description: "nan", group_id: 2}
             ],
             links: [
                 {source: 0, target: 1, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
                 {source: 0, target: 3, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Илья Ефимович Репин", description: "Описание Мамонтов - Репин"},
                 {source: 0, target: 7, type: "friend-2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Сергей Васильевич Рахманинов", description: "Описание Мамонтов - Рахманинов"},
                 {source: 0, target: 8, type: "friend-2", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "Описание Мамонтов - Корсаков"},
+                {source: 0, target: 14, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Виктор Михайлович Васнецов", description: "nan"},
+                {source: 14, target: 15, type: "family", full_name_1: "Виктор Михайлович Васнецов", full_name_2: "Апполинарий Михайлович Васнецов", description: "nan"},
                 {source: 0, target: 5, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Валентин Александрович Серов", description: "nan"},
                 {source: 0, target: 6, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Михаил Александрович Врубель", description: "nan"},
                 {source: 0, target: 4, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
@@ -203,15 +213,19 @@
                 {source: 9, target: 0, type: "friend-1", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Савва Иванович Мамонтов", description: "nan"},
                 {source: 9, target: 10, type: "friend-2", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Виктор Александрович Гартман", description: "nan"},
                 {source: 9, target: 11, type: "friend-3", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Сергей Петрович Боткин", description: "nan"},
-                {source: 9, target: 12, type: "friend-1", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Михаил Михайлович Иванов", description: "nan"}
+                {source: 9, target: 12, type: "friend-1", full_name_1: "Марк Матвеевич Антокольский", full_name_2: "Михаил Михайлович Иванов", description: "nan"},
+                {source: 1, target: 16, type: "apprentice", full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Исаак Ильич Левитан", description: "nan"},
+                {source: 1, target: 4, type: "apprentice", full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Константин Алексеевич Коровин", description: "nan"},
+                {source: 17, target: 16, type: "apprentice", full_name_1: "Алексей Кондратьевич Саврасов", full_name_2: "Исаак Ильич Левитан", description: "nan"},
+                {source: 18, target: 16, type: "apprentice", full_name_1: "Василий Григорьевич Перов", full_name_2: "Исаак Ильич Левитан", description: "nan"}
             ]
         };
 
         const group2color = {
-            "Художники": "#0485ff",
+            "Художники": "#0e7a0d",
             "Меценаты": "#d3af37",
-            "Композиторы и музыканты": "#B32134",
-            "Врачи и учёные": "#0e7a0d",
+            "Композиторы и музыканты": "#b32134",
+            "Врачи и учёные": "#0485ff",
             "Архитекторы": "#f07f5e",
             "Критики": "#895200",
             "Скульпторы": "#d859dc"
@@ -375,14 +389,15 @@
         function showNodeInfo(d) {
             sideTooltip.html(`
                 <div class="tooltip-header">
-                    <h2 style="margin: 0; color: #2c3e50;">${d.full_name}</h2>
+                    <h2 style="margin: 0; color: #333333;">${d.full_name}</h2>
+                    <p style="margin: 5px 0 0 0; color: #666666; font-size: 12px;">${d.years}</p>
                 </div>
 
                 <div class="tooltip-content">
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div style="font-size: 14px; font-weight: bold; color: #34495e;">${d.description}</div>
-                        </div>
+                    <div style="font-size: 14px; color: #444444;">
+                        <p>
+                            ${d.description}
+                        </p>
                     </div>
                 </div>
             `);
@@ -454,7 +469,18 @@
                         border: 1px solid white;
                     ">
                         <div style="margin-bottom: 15px;">
-                            <h4 style="margin: 0 0 8px 0; font-size: 16px;">Общества, объединения, кружки</h4>
+                            <h3 style="margin: 0 0 8px 0; font-size: 15px; font-family: sans-serif;">Люди</h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                ${allGroups.map(group => `
+                                    <button onclick="filterNodesByGroup('${group}')"
+                                            style="color: black; border: 1px solid ${group2color[group]};
+                                                   padding: 4px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">
+                                        ${group}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <br>
+                            <h3 style="margin: 0 0 8px 0; font-size: 15px; font-family: sans-serif;">Общества, объединения, кружки</h3>
                             <div style="display: flex; flex-wrap: wrap; gap: 5px;">
                                 ${allTags.map(tag => `
                                     <button onclick="filterNodesByTag('${tag}')"
@@ -463,14 +489,6 @@
                                         ${tag}
                                     </button>
                                 `).join('')}
-                                ${allGroups.map(group => `
-                                    <button onclick="filterNodesByGroup('${group}')"
-                                            style="color: black; border: 1px solid ${group2color[group]};
-                                                   padding: 4px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">
-                                        ${group}
-                                    </button>
-                                `).join('')}
-
                             </div>
                         </div>
 
