@@ -30,7 +30,7 @@
         transition: inherit;
     }
     .node-container.highlight {
-        --node-size: 37px;
+        --node-size: 45px;
         filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.9));
     }
     .node-container.dim {
@@ -173,35 +173,46 @@
         // Данные графа
         const graph = {
             nodes: [
-                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "mamontov_si.png", group: "Меценаты", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера"], years: "1841 - 1918", description: "<p>Выдающийся русский предприниматель и меценат, сыгравший ключевую роль в развитии отечественной культуры.</p><p>Главной заслугой Мамонтова стало создание художественного кружка в его подмосковном имении Абрамцево. При его поддержке и участии там работали такие художники, как Виктор Васнецов, Илья Репин, Валентин Серов, Михаил Врубель и многие другие.</p><p>Мамонтов также внёс огромный вклад в музыкальную жизнь, основав в Москве Частную русскую оперу. Его театр открыл миру гений Фёдора Шаляпина и популяризировал творчество композиторов «Могучей кучки». Кроме того, по его инициативе в Абрамцеве были возрождены народные промыслы, включая знаменитую абрамцево-кудринскую резьбу по дереву.</p><p>Савва Мамонтов вошёл в историю как «русский Медичи» - просвещённый покровитель искусств, чья деятельность оставила глубокий след в русской живописи, музыке и театре.</p>", group_id: 5},
-                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "polenov_vd.png", group: "Художники", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера", "Товарищество Передвижников"], years: "1844 - 1927", description: "Описание Поленов", group_id: 4},
-                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "polenova_ed.png", group: "Художники", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "Описание Поленова", group_id: 4},
-                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "repin_ie.png", group: "Художники", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "Описание Репин", group_id: 4},
-                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "korovin_ka.png", group: "Художники", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера", "Союз русских художников"], years: "nan", description: "Описание Коровин", group_id: 4},
-                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "serov_va.png", group: "Художники", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера", "Мирискусники"], years: "nan", description: "Описание Серов", group_id: 4},
-                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "vrubel_ma.png", group: "Художники", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера"], years: "nan", description: "Описание Врубель", group_id: 4},
-                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Композиторы и музыканты", full_name: "Сергей Васильевич Рахманинов", tags: ["Мамонтовская Опера"], years: "nan", description: "Описание Рахманинов", group_id: 0},
-                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "rimsky-korsakov_na.png", group: "Композиторы и музыканты", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Мамонтовская Опера", "Могучая Кучка"], years: "nan", description: "Описание Римский-Корсаков", group_id: 0},
+                {id: 0, short_name: "Савва Мамонтов", abr_name: "С.И. Мамонтов", img: "mamontov_si.png", group: "Меценаты", full_name: "Савва Иванович Мамонтов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера"], years: "1841 - 1918", description: "<p>Выдающийся русский предприниматель и меценат, сыгравший ключевую роль в развитии отечественной культуры.</p><p>Главной заслугой Мамонтова стало создание художественного кружка в его подмосковном имении Абрамцево. При его поддержке и участии там работали такие художники, как Виктор Васнецов, Илья Репин, Валентин Серов, Михаил Врубель и многие другие.</p><p>Мамонтов также внёс огромный вклад в музыкальную жизнь, основав в Москве Частную русскую оперу. Его театр открыл миру гений Фёдора Шаляпина и популяризировал творчество композиторов «Могучей кучки». Кроме того, по его инициативе в Абрамцеве были возрождены народные промыслы, включая знаменитую абрамцево-кудринскую резьбу по дереву.</p><p>Савва Мамонтов вошёл в историю как «русский Медичи» - просвещённый покровитель искусств, чья деятельность оставила глубокий след в русской живописи, музыке и театре.</p>", group_id: 1},
+                {id: 1, short_name: "Василий Поленов", abr_name: "В.Д. Поленов", img: "polenov_vd.png", group: "Художники", full_name: "Василий Дмитриевич Поленов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера", "Товарищество Передвижников"], years: "1844 - 1927", description: "Описание Поленов", group_id: 2},
+                {id: 2, short_name: "Елена Поленова", abr_name: "Е.Д. Поленова", img: "polenova_ed.png", group: "Художники", full_name: "Елена Дмитриевна Поленова", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "Описание Поленова", group_id: 2},
+                {id: 3, short_name: "Илья Репин", abr_name: "И.Е. Репин", img: "repin_ie.png", group: "Художники", full_name: "Илья Ефимович Репин", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "Описание Репин", group_id: 2},
+                {id: 4, short_name: "Константин Коровин", abr_name: "К.А. Коровин", img: "korovin_ka.png", group: "Художники", full_name: "Константин Алексеевич Коровин", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера", "Союз русских художников"], years: "nan", description: "Описание Коровин", group_id: 2},
+                {id: 5, short_name: "Валентин Серов", abr_name: "В.А. Серов", img: "serov_va.png", group: "Художники", full_name: "Валентин Александрович Серов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера", "Мирискусники"], years: "nan", description: "Описание Серов", group_id: 2},
+                {id: 6, short_name: "Михаил Врубель", abr_name: "М.А. Врубель", img: "vrubel_ma.png", group: "Художники", full_name: "Михаил Александрович Врубель", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера"], years: "nan", description: "Описание Врубель", group_id: 2},
+                {id: 7, short_name: "Сергей Рахманинов", abr_name: "С.В. Рахманинов", img: "rahmaninov_sv.png", group: "Композиторы и Музыканты", full_name: "Сергей Васильевич Рахманинов", tags: ["Мамонтовская Опера"], years: "nan", description: "Описание Рахманинов", group_id: 4},
+                {id: 8, short_name: "Николай Римский-Корсаков", abr_name: "Н.А. Римский-Корсаков", img: "rimsky-korsakov_na.png", group: "Композиторы и Музыканты", full_name: "Николай Андреевич Римский-Корсаков", tags: ["Мамонтовская Опера", "Могучая Кучка"], years: "nan", description: "Описание Римский-Корсаков", group_id: 4},
                 {id: 9, short_name: "Марк Антокольский", abr_name: "М.М. Антокольский", img: "antokolsky_mm.png", group: "Скульпторы", full_name: "Марк Матвеевич Антокольский", tags: ["Абрамцевский Художественный Кружок"], years: "nan", description: "nan", group_id: 6},
-                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "gartman_va.png", group: "Архитекторы", full_name: "Виктор Александрович Гартман", tags: [], years: "nan", description: "nan", group_id: 2},
-                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "botkin_sp.png", group: "Врачи и учёные", full_name: "Сергей Петрович Боткин", tags: [], years: "nan", description: "nan", group_id: 7},
-                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "ivanov_mm.png", group: "Критики", full_name: "Михаил Михайлович Иванов", tags: [], years: "nan", description: "nan", group_id: 3},
-                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "prahov_av.png", group: "Критики", full_name: "Адриан Викторович Прахов", tags: [], years: "nan", description: "nan", group_id: 3},
-                {id: 14, short_name: "Виктор Васнецов", abr_name: "В.М. Васнецов", img: "vasnetsov_vm.png", group: "Художники", full_name: "Виктор Михайлович Васнецов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера"], years: "nan", description: "nan", group_id: 4},
-                {id: 15, short_name: "Апполинарий Васнецов", abr_name: "А.М. Васнецов", img: "vasnetsov_am.png", group: "Художники", full_name: "Апполинарий Михайлович Васнецов", tags: [], years: "nan", description: "nan", group_id: 4},
-                {id: 16, short_name: "Исаак Левитан", abr_name: "И.И. Левитан", img: "levitan_ii.png", group: "Художники", full_name: "Исаак Ильич Левитан", tags: [], years: "1860 - 1900", description: "nan", group_id: 4},
-                {id: 17, short_name: "Алексей Саврасов", abr_name: "А.К. Саврасов", img: "savrasov_ak.png", group: "Художники", full_name: "Алексей Кондратьевич Саврасов", tags: ["Товарищество Передвижников"], years: "1830 - 1897", description: "nan", group_id: 4},
-                {id: 18, short_name: "Василий Перов", abr_name: "В.Г. Перов", img: "perov_vg.png", group: "Художники", full_name: "Василий Григорьевич Перов", tags: ["Товарищество Передвижников"], years: "1833 - 1882", description: "nan", group_id: 4},
-                {id: 19, short_name: "Фёдор Шаляпин", abr_name: "Ф.И. Шаляпин", img: "shalyapin_fi.png", group: "Певцы", full_name: "Фёдор Иванович Шаляпин", tags: ["Мамонтовская Опера"], years: "1873 - 1938", description: "nan", group_id: 8},
-                {id: 20, short_name: "Надежда Забела-Врубель", abr_name: "Н.И. Забела-Врубель", img: "zabela-vrubel_ni.png", group: "Певцы", full_name: "Надежда Ивановна Забела-Врубель", tags: ["Мамонтовская Опера"], years: "1868 - 1913", description: "nan", group_id: 8},
-                {id: 21, short_name: "Татьяна Любатович", abr_name: "Т.С. Любатович", img: "lyubatovich_ts.png", group: "Певцы", full_name: "Татьяна Спиридоновна Любатович", tags: ["Мамонтовская Опера"], years: "1859 - 1932", description: "nan", group_id: 8},
-                {id: 22, short_name: "Надежда Салина", abr_name: "Н.В. Салина", img: "salina_nv.png", group: "Певцы", full_name: "Надежда Васильевна Салина", tags: ["Мамонтовская Опера"], years: "1864 - 1956", description: "nan", group_id: 8},
-                {id: 23, short_name: "Абрам Архипов", abr_name: "А.Е. Архипов", img: "arhipov_ae.png", group: "Художники", full_name: "Абрам Ефимович Архипов", tags: ["Товарищество Передвижников"], years: "1862 - 1930", description: "nan", group_id: 4},
-                {id: 24, short_name: "Павел Чистяков", abr_name: "П.П. Чистяков", img: "chistyakov_pp.png", group: "Художники", full_name: "Павел Петрович Чистяков", tags: [], years: "1832 - 1919", description: "nan", group_id: 4},
-                {id: 25, short_name: "Иван Крамской", abr_name: "И.Н. Крамской", img: "kramskoy_in.png", group: "Художники", full_name: "Иван Николаевич Крамской", tags: ["Товарищество Передвижников", "Бунт Четырнадцати"], years: "1837 - 1887", description: "nan", group_id: 4},
-                {id: 26, short_name: "Иван Шишкин", abr_name: "И.И. Шишкин", img: "shishkin_ii.png", group: "Художники", full_name: "Иван Иванович Шишкин", tags: ["Товарищество Передвижников"], years: "1832 - 1898", description: "nan", group_id: 4},
-                {id: 27, short_name: "Константин Маковский", abr_name: "К.Е. Маковский", img: "makovsky_ke.png", group: "Художники", full_name: "Константин Егорович Маковский", tags: ["Товарищество Передвижников", "Бунт Четырнадцати"], years: "1839 - 1915", description: "nan", group_id: 4},
-                {id: 28, short_name: "Антон Чехов", abr_name: "А.П. Чехов", img: "chehov_ap.png", group: "Писатели", full_name: "Антон Павлович Чехов", tags: [], years: "1860 - 1904", description: "nan", group_id: 1}
+                {id: 10, short_name: "Виктор Гартман", abr_name: "В.А. Гартман", img: "gartman_va.png", group: "Архитекторы", full_name: "Виктор Александрович Гартман", tags: [], years: "nan", description: "nan", group_id: 8},
+                {id: 11, short_name: "Сергей Боткин", abr_name: "С.П. Боткин", img: "botkin_sp.png", group: "Врачи и Учёные", full_name: "Сергей Петрович Боткин", tags: [], years: "nan", description: "nan", group_id: 3},
+                {id: 12, short_name: "Михаил Иванов", abr_name: "М.М. Иванов", img: "ivanov_mm.png", group: "Критики", full_name: "Михаил Михайлович Иванов", tags: [], years: "nan", description: "nan", group_id: 7},
+                {id: 13, short_name: "Адриан Прахов", abr_name: "А.В. Прахов", img: "prahov_av.png", group: "Критики", full_name: "Адриан Викторович Прахов", tags: [], years: "nan", description: "nan", group_id: 7},
+                {id: 14, short_name: "Виктор Васнецов", abr_name: "В.М. Васнецов", img: "vasnetsov_vm.png", group: "Художники", full_name: "Виктор Михайлович Васнецов", tags: ["Абрамцевский Художественный Кружок", "Мамонтовская Опера"], years: "nan", description: "nan", group_id: 2},
+                {id: 15, short_name: "Апполинарий Васнецов", abr_name: "А.М. Васнецов", img: "vasnetsov_am.png", group: "Художники", full_name: "Апполинарий Михайлович Васнецов", tags: [], years: "nan", description: "nan", group_id: 2},
+                {id: 16, short_name: "Исаак Левитан", abr_name: "И.И. Левитан", img: "levitan_ii.png", group: "Художники", full_name: "Исаак Ильич Левитан", tags: [], years: "1860 - 1900", description: "nan", group_id: 2},
+                {id: 17, short_name: "Алексей Саврасов", abr_name: "А.К. Саврасов", img: "savrasov_ak.png", group: "Художники", full_name: "Алексей Кондратьевич Саврасов", tags: ["Товарищество Передвижников"], years: "1830 - 1897", description: "nan", group_id: 2},
+                {id: 18, short_name: "Василий Перов", abr_name: "В.Г. Перов", img: "perov_vg.png", group: "Художники", full_name: "Василий Григорьевич Перов", tags: ["Товарищество Передвижников"], years: "1833 - 1882", description: "nan", group_id: 2},
+                {id: 19, short_name: "Фёдор Шаляпин", abr_name: "Ф.И. Шаляпин", img: "shalyapin_fi.png", group: "Певцы", full_name: "Фёдор Иванович Шаляпин", tags: ["Мамонтовская Опера"], years: "1873 - 1938", description: "nan", group_id: 0},
+                {id: 20, short_name: "Надежда Забела-Врубель", abr_name: "Н.И. Забела-Врубель", img: "zabela-vrubel_ni.png", group: "Певцы", full_name: "Надежда Ивановна Забела-Врубель", tags: ["Мамонтовская Опера"], years: "1868 - 1913", description: "nan", group_id: 0},
+                {id: 21, short_name: "Татьяна Любатович", abr_name: "Т.С. Любатович", img: "lyubatovich_ts.png", group: "Певцы", full_name: "Татьяна Спиридоновна Любатович", tags: ["Мамонтовская Опера"], years: "1859 - 1932", description: "nan", group_id: 0},
+                {id: 22, short_name: "Надежда Салина", abr_name: "Н.В. Салина", img: "salina_nv.png", group: "Певцы", full_name: "Надежда Васильевна Салина", tags: ["Мамонтовская Опера"], years: "1864 - 1956", description: "nan", group_id: 0},
+                {id: 23, short_name: "Абрам Архипов", abr_name: "А.Е. Архипов", img: "arhipov_ae.png", group: "Художники", full_name: "Абрам Ефимович Архипов", tags: ["Товарищество Передвижников"], years: "1862 - 1930", description: "nan", group_id: 2},
+                {id: 24, short_name: "Павел Чистяков", abr_name: "П.П. Чистяков", img: "chistyakov_pp.png", group: "Художники", full_name: "Павел Петрович Чистяков", tags: [], years: "1832 - 1919", description: "nan", group_id: 2},
+                {id: 25, short_name: "Иван Крамской", abr_name: "И.Н. Крамской", img: "kramskoy_in.png", group: "Художники", full_name: "Иван Николаевич Крамской", tags: ["Товарищество Передвижников", "Бунт Четырнадцати"], years: "1837 - 1887", description: "nan", group_id: 2},
+                {id: 26, short_name: "Иван Шишкин", abr_name: "И.И. Шишкин", img: "shishkin_ii.png", group: "Художники", full_name: "Иван Иванович Шишкин", tags: ["Товарищество Передвижников"], years: "1832 - 1898", description: "nan", group_id: 2},
+                {id: 27, short_name: "Константин Маковский", abr_name: "К.Е. Маковский", img: "makovsky_ke.png", group: "Художники", full_name: "Константин Егорович Маковский", tags: ["Товарищество Передвижников", "Бунт Четырнадцати"], years: "1839 - 1915", description: "nan", group_id: 2},
+                {id: 28, short_name: "Антон Чехов", abr_name: "А.П. Чехов", img: "chehov_ap.png", group: "Писатели", full_name: "Антон Павлович Чехов", tags: [], years: "1860 - 1904", description: "nan", group_id: 5},
+                {id: 29, short_name: "Архип Куинджи", abr_name: "А.И. Куинджи", img: "kuindzhi_ai.png", group: "Художники", full_name: "Архип Иванович Куинджи", tags: ["Товарищество Передвижников"], years: "1842 - 1910", description: "nan", group_id: 2},
+                {id: 30, short_name: "Николай Ярошенко", abr_name: "Н.А. Ярошенко", img: "yaroshenko_na.png", group: "Художники", full_name: "Николай Александрович Ярошенко", tags: ["Товарищество Передвижников"], years: "1846 - 1898", description: "nan", group_id: 2},
+                {id: 31, short_name: "Иван Айвазовский", abr_name: "И.К. Айвазовский", img: "aivazovsky_ik.png", group: "Художники", full_name: "Иван Константинович Айвазовский", tags: [], years: "1817 - 1900", description: "nan", group_id: 2},
+                {id: 32, short_name: "Дмитрий Менделеев", abr_name: "Д.И. Менделеев", img: "mendeleev_di.png", group: "Врачи и Учёные", full_name: "Дмитрий Иванович Менделеев", tags: [], years: "1834 - 1907", description: "nan", group_id: 3},
+                {id: 33, short_name: "Милий Балакирев", abr_name: "М.А. Балакирев", img: "balakirev_ma.png", group: "Композиторы и Музыканты", full_name: "Милий Алексеевич Балакирев", tags: ["Могучая Кучка"], years: "1836 - 1910", description: "nan", group_id: 4},
+                {id: 34, short_name: "Цезарь Кюи", abr_name: "Ц.А. Кюи", img: "kuyi_ca.png", group: "Композиторы и Музыканты", full_name: "Цезарь Антонович Кюи", tags: ["Могучая Кучка"], years: "1835 - 1918", description: "nan", group_id: 4},
+                {id: 35, short_name: "Модест Мусоргский", abr_name: "М.П. Мусоргский", img: "musorgsky_mp.png", group: "Композиторы и Музыканты", full_name: "Модест Петрович Мусоргский", tags: ["Могучая Кучка"], years: "1839 - 1881", description: "nan", group_id: 4},
+                {id: 36, short_name: "Александр Бородин", abr_name: "А.П. Бородин", img: "borodin_ap.png", group: "Композиторы и Музыканты", full_name: "Александр Порфирьевич Бородин", tags: ["Могучая Кучка"], years: "1833 - 1887", description: "nan", group_id: 4},
+                {id: 37, short_name: "Владимир Стасов", abr_name: "В.В. Стасов", img: "stasov_vv.png", group: "Критики", full_name: "Владимир Васильевич Стасов", tags: ["Могучая Кучка"], years: "1824 - 1906", description: "nan", group_id: 7},
+                {id: 38, short_name: "Иван Тургенев", abr_name: "И.С. Тургенев", img: "turgenev_is.png", group: "Писатели", full_name: "Иван Сергеевич Тургенев", tags: [], years: "1818 - 1883", description: "nan", group_id: 5},
+                {id: 39, short_name: "Лев Толстой", abr_name: "Л.Н. Толстой", img: "tolstoy_ln.png", group: "Писатели", full_name: "Лев Николаевич Толстой", tags: [], years: "1828 - 1910", description: "nan", group_id: 5}
             ],
             links: [
                 {source: 0, target: 1, type: "friend-1", full_name_1: "Савва Иванович Мамонтов", full_name_2: "Василий Дмитриевич Поленов", description: "Описание Мамонтов - Поленов"},
@@ -245,15 +256,37 @@
                 {source: 1, target: 25, type: "friend-1", full_name_1: "Василий Дмитриевич Поленов", full_name_2: "Иван Николаевич Крамской", description: "nan"},
                 {source: 26, target: 25, type: "friend-1", full_name_1: "Иван Иванович Шишкин", full_name_2: "Иван Николаевич Крамской", description: "nan"},
                 {source: 27, target: 25, type: "friend-1", full_name_1: "Константин Егорович Маковский", full_name_2: "Иван Николаевич Крамской", description: "nan"},
-                {source: 28, target: 16, type: "friend-1", full_name_1: "Антон Павлович Чехов", full_name_2: "Исаак Ильич Левитан", description: "nan"}
+                {source: 28, target: 16, type: "friend-1", full_name_1: "Антон Павлович Чехов", full_name_2: "Исаак Ильич Левитан", description: "nan"},
+                {source: 29, target: 3, type: "friend-1", full_name_1: "Архип Иванович Куинджи", full_name_2: "Илья Ефимович Репин", description: "nan"},
+                {source: 29, target: 25, type: "friend-1", full_name_1: "Архип Иванович Куинджи", full_name_2: "Иван Николаевич Крамской", description: "nan"},
+                {source: 29, target: 32, type: "friend-1", full_name_1: "Архип Иванович Куинджи", full_name_2: "Дмитрий Иванович Менделеев", description: "nan"},
+                {source: 29, target: 31, type: "friend-3", full_name_1: "Архип Иванович Куинджи", full_name_2: "Иван Константинович Айвазовский", description: "nan"},
+                {source: 29, target: 30, type: "friend-2", full_name_1: "Архип Иванович Куинджи", full_name_2: "Николай Александрович Ярошенко", description: "nan"},
+                {source: 37, target: 8, type: "friend-1", full_name_1: "Владимир Васильевич Стасов", full_name_2: "Николай Андреевич Римский-Корсаков", description: "nan"},
+                {source: 37, target: 33, type: "friend-1", full_name_1: "Владимир Васильевич Стасов", full_name_2: "Милий Алексеевич Балакирев", description: "nan"},
+                {source: 37, target: 34, type: "friend-1", full_name_1: "Владимир Васильевич Стасов", full_name_2: "Цезарь Антонович Кюи", description: "nan"},
+                {source: 37, target: 35, type: "friend-1", full_name_1: "Владимир Васильевич Стасов", full_name_2: "Модест Петрович Мусоргский", description: "nan"},
+                {source: 37, target: 36, type: "friend-1", full_name_1: "Владимир Васильевич Стасов", full_name_2: "Александр Порфирьевич Бородин", description: "nan"},
+                {source: 8, target: 33, type: "friend-1", full_name_1: "Николай Андреевич Римский-Корсаков", full_name_2: "Милий Алексеевич Балакирев", description: "nan"},
+                {source: 8, target: 34, type: "friend-1", full_name_1: "Николай Андреевич Римский-Корсаков", full_name_2: "Цезарь Антонович Кюи", description: "nan"},
+                {source: 8, target: 35, type: "friend-1", full_name_1: "Николай Андреевич Римский-Корсаков", full_name_2: "Модест Петрович Мусоргский", description: "nan"},
+                {source: 8, target: 36, type: "friend-1", full_name_1: "Николай Андреевич Римский-Корсаков", full_name_2: "Александр Порфирьевич Бородин", description: "nan"},
+                {source: 33, target: 34, type: "friend-1", full_name_1: "Милий Алексеевич Балакирев", full_name_2: "Цезарь Антонович Кюи", description: "nan"},
+                {source: 33, target: 35, type: "friend-1", full_name_1: "Милий Алексеевич Балакирев", full_name_2: "Модест Петрович Мусоргский", description: "nan"},
+                {source: 33, target: 36, type: "friend-1", full_name_1: "Милий Алексеевич Балакирев", full_name_2: "Александр Порфирьевич Бородин", description: "nan"},
+                {source: 34, target: 35, type: "friend-1", full_name_1: "Цезарь Антонович Кюи", full_name_2: "Модест Петрович Мусоргский", description: "nan"},
+                {source: 34, target: 36, type: "friend-1", full_name_1: "Цезарь Антонович Кюи", full_name_2: "Александр Порфирьевич Бородин", description: "nan"},
+                {source: 35, target: 36, type: "friend-1", full_name_1: "Модест Петрович Мусоргский", full_name_2: "Александр Порфирьевич Бородин", description: "nan"},
+                {source: 38, target: 1, type: "friend-2", full_name_1: "Иван Сергеевич Тургенев", full_name_2: "Василий Дмитриевич Поленов", description: "nan"},
+                {source: 38, target: 39, type: "friend-2", full_name_1: "Иван Сергеевич Тургенев", full_name_2: "Лев Николаевич Толстой", description: "nan"}
             ]
         };
 
         const group2color = {
             "Художники": "#0e7a0d",
             "Меценаты": "#d3af37",
-            "Композиторы и музыканты": "#b32134",
-            "Врачи и учёные": "#0485ff",
+            "Композиторы и Музыканты": "#b32134",
+            "Врачи и Учёные": "#0485ff",
             "Архитекторы": "#ad6ce2",
             "Критики": "#895200",
             "Скульпторы": "#d859dc",
@@ -262,7 +295,7 @@
         };
 
         // const width = 1600, height = 800;
-        const width = 2000, height = 1000;
+        const width = 2000, height = 1400;
 
         // Создание SVG
         const svg = d3.select("#graph")
