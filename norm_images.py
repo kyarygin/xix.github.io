@@ -5,12 +5,11 @@ def process(image_path, output_size):
     with Image.open(image_path) as im:
         width, height = im.size
         if width == height == output_size:
-            print(image_path, 'no resize needed')
             return
+
         print(image_path, (width, height), '->', (output_size, output_size))
 
         min_dim = min(width, height)
-
         left = (width - min_dim) // 2
         top = (height - min_dim) // 2
         right = left + min_dim
