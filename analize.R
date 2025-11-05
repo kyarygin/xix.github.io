@@ -21,3 +21,11 @@ dt_nodes[
     full_name
 ]
 
+dt_links[
+][,
+    .(n_mains = .N,
+      sum_n = sum(n)),
+    .(link_name)
+][!(link_name %in% dt_links[, main_name])
+][order(-n_mains)
+][1:100]
