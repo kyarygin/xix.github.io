@@ -6,7 +6,17 @@ def process_full_name(full_name: str):
     return {
         # 'full_name': full_name,
         'short_name': f'{name} {surname}',
-        'abr_name': f'{name[0]}.{patronymic[0]}. {surname}'
+        'abr_name': f'{name[0]}.{patronymic[0]}. {surname}',
+        'wiki_name': f'{surname}, {name} {patronymic}'
+    }
+
+def process_years(years: str):
+    if not years:
+        return {}
+    years_split = [int(x) for x in years.split(' - ')]
+    return {
+        'year_from': years_split[0],
+        'year_to': years_split[1]
     }
 
 def load_data(nodes_file: str, edges_file: str):
@@ -14,10 +24,16 @@ def load_data(nodes_file: str, edges_file: str):
         {
             **{'id': index},
             **process_full_name(row['full_name']),
+            **process_years(row['years']),
             **row,
             **{'tags': [x for x in row['tags'].split(',') if x != 'nan']}
         }
-        for index, row in pd.read_csv(nodes_file, sep = ';').astype(str).iterrows()
+        for index, row in (
+            pd.read_csv(nodes_file, sep = ';')
+            .fillna('')
+            .astype(str)
+            .iterrows()
+        )
     ]
     groups = {node['group'] for node in nodes}
     group2id = {group: group_id for group_id, group in enumerate(list(groups))}
